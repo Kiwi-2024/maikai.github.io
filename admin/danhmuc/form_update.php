@@ -27,7 +27,7 @@
             </div>
             <div class="form-group">
                 <label for="TenDM">Mô Ta</label>
-                <textarea name="MoTa" required><?php echo $MoTa; ?></textarea>
+                <textarea name="MoTa"><?php echo $MoTa; ?></textarea>
             </div>
             <button type="submit">Lưu chỉnh sửa</button>
 

@@ -45,8 +45,8 @@
         <div class="form-group">
             <label for="loaisach">Loại sách:</label>
             <select name="LoaiSach" id="loaisach">
-                <option value="Miễn Phí">Sách miễn phí</option>
-                <option value="Hội Viên">Sách Hội Viên</option>
+                <option value="MienPhi">Sách miễn phí</option>
+                <option value="HoiVien">Sách Hội Viên</option>
             </select>
         </div>
         <div class="form-group">
