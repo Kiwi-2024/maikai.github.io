@@ -33,15 +33,16 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['MaSach'])) {
 // Xử lý gửi biểu mẫu khi người dùng nhấn nút "Lưu chỉnh sửa"
 
 ?>
-
+<div class="content-header">
+        <h2>Chỉnh sửa sách</h2>
+    </div>
 <div class="container-1">
-    <h2>Chỉnh sửa thông tin Sách</h2>
-    <form action="index.php?act=updatesach" method="POST" enctype="multipart/form-data">
+    <form action="index.php?act=updatesach" class="form1 form2" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="MaSach" value="<?php echo $MaSach; ?>">
-
-        <div class="form-group">
+        <div class="box-pp">
+        <div class="form-group1">
             <label for="category">Danh mục:</label>
-            <select name="DanhMuc" id="category" class="select-box">
+            <select name="DanhMuc" id="danhmuc" class="select-box">
                 <?php
                 // Truy vấn để lấy danh sách các danh mục
                 $sql = "SELECT MaDM, TenDM FROM danhmuc";
@@ -51,42 +52,52 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['MaSach'])) {
                 if ($result && mysqli_num_rows($result) > 0) {
                     while ($row = mysqli_fetch_assoc($result)) {
                         $selected = ($row['MaDM'] == $DanhMuc) ? "selected" : "";
-                        echo "<option value='" . $row['MaDM'] . "' $selected>" . $row['TenDM'] . "</option>";
+                        echo "<option class='option' value='" . $row['MaDM'] . "' $selected>" . $row['TenDM'] . "</option>";
                     }
                 } else {
-                    echo "<option value=''>No categories found</option>";
+                    echo "<option class='option' value=''>No categories found</option>";
                 }
                 ?>
             </select>
         </div>
-        <div class="form-group">
+        <div class="form-group1">
             <label for="TenSach">Tên Sách:</label>
             <input type="text" name="TenSach" id="TenSach" value="<?php echo $TenSach; ?>">
         </div>
-        <div class="form-group">
+        <div class="form-group1">
             <label for="TacGia">Tên Tác Giả:</label>
             <input type="text" name="TacGia" id="TacGia" value="<?php echo $TacGia; ?>">
         </div>
-        <div class="form-group">
-            <label for="MoTa">Mô tả:</label>
-            <textarea name="MoTa" id="MoTa" required><?php echo $MoTa; ?></textarea>
-        </div>
-        <div class="form-group">
+        <div class="form-group1">
             <label for="LoaiSach">Loại sách:</label>
-            <select name="LoaiSach" id="LoaiSach">
-                <option value="MienPhi" <?php if ($LoaiSach == 'MienPhi') echo 'selected'; ?>>Sách miễn phí</option>
-                <option value="HoiVien" <?php if ($LoaiSach == 'HoiVien') echo 'selected'; ?>>Sách Hội Viên</option>
+            <select name="LoaiSach" class="select-box">
+                <option class="option" value="MienPhi" <?php if ($LoaiSach == 'MienPhi') echo 'selected'; ?>>Sách miễn phí</option>
+                <option class="option" value="HoiVien" <?php if ($LoaiSach == 'HoiVien') echo 'selected'; ?>>Sách Hội Viên</option>
             </select>
         </div>
-        <div class="form-group">
+
+        </div>
+        <div class="box-pp">
+        <div class="form-group1">
             <label for="NamXuatBan">Năm Xuất Bản:</label>
             <input type="date" name="NamXuatBan" id="NamXuatBan" value="<?php echo $NamXuatBan; ?>">
         </div>
-        <div class="form-group">
+        <div class="form-group1">
             <label for="HinhAnhBia">Hình ảnh:</label>
             <input type="file" name="HinhAnhBia" id="HinhAnhBia">
         </div>
+        <div class="form-group1">
+            <label for="MoTa">Mô tả:</label>
+            <textarea name="MoTa" id="mota" required><?php echo $MoTa; ?></textarea>
+        </div>
+        
+        </div>
+        <div class="box-hh">
+            <div class="right">
+        <button type="button" onclick="history.back()">HỦY</button>
         <button type="submit">Lưu chỉnh sửa</button>
+        </div>
+        </div>
     </form>
     <!-- Hiển thị hình ảnh hiện tại -->
 </div>

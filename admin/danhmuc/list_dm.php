@@ -4,10 +4,11 @@
 $results = mysqli_query($conn, 'SELECT * FROM danhmuc');
 
 ?>
-    <h1>Quản lý danh mục</h1>
-
+<div class="content-header">
+<h2> Quản lý danh mục loại sách</h2>
+    </div>
     <div class="container-2">
-    <a href="index.php?act=adddm"><button>Thêm danh mục</button></a>
+    <a href="index.php?act=adddm" class="add-button">Thêm danh mục</a>
         <table class="table">
             <tr>
                 <th>Mã danh mục</th>
@@ -30,16 +31,12 @@ $results = mysqli_query($conn, 'SELECT * FROM danhmuc');
                     <a class="link" href="index.php?act=updatedm&MaDM=<?php echo $row['MaDM']; ?>">Update</a>
 
                         <br>
-                        <a class="link" href="danhmuc/delete.php?MaDM=<?php echo $row['MaDM']; ?>">Delete</a>
+                        <a class="link" href="index.php?act=deletedanhmuc&MaDM=<?php echo $row['MaDM']; ?>">Delete</a>
                     </td>
                 </tr>
                 <?php } ?>
         </table>
     </div>
-
-</body>
-
-</html>
 <?php 
 mysqli_free_result($results);
 mysqli_close($conn)

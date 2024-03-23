@@ -17,20 +17,24 @@
         exit();
     }
 ?>
-    <div class="container-1">
-        <h2>Chỉnh sửa danh mục tạp chí</h2>
-        <form action="index.php?act=updatedm" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="MaDM" value="<?php echo $MaDM; ?>">
-            <div class="form-group">
-                <label for="TenDM">Tên danh mục</label>
-                <input type="text" name="TenDM" id="" value="<?php echo $TenDM; ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="TenDM">Mô Ta</label>
-                <textarea name="MoTa"><?php echo $MoTa; ?></textarea>
-            </div>
-            <button type="submit">Lưu chỉnh sửa</button>
-
-        </form>
-
+<div class="content-header">
+        <h2>Chỉnh sửa danh mục</h2>
     </div>
+    <div class="container-1">
+    <form class="form1" action="index.php?act=updatedm" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="MaDM" value="<?php echo $MaDM; ?>">
+        <div class="form-group">
+            <label for="TenDM">Tên danh mục</label>
+            <input type="text" name="TenDM" id="TenDM" value="<?php echo $TenDM; ?>" required>
+        </div>
+        <div class="form-group">
+            <label for="MoTa">Mô tả</label>
+            <textarea name="MoTa" id="MoTa"><?php echo $MoTa; ?></textarea>
+        </div>
+        <div class="float">
+        <button type="button" onclick="history.back()">HỦY</button>
+        <button type="submit">Lưu chỉnh sửa</button>
+        </div>
+    </form>
+</div>
+

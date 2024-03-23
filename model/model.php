@@ -17,10 +17,8 @@ function addDanhMuc()
         if ($conn->connect_error) {
             die ("Kết nối không thành công: " . $conn->connect_error);
         }
-
         $TenDM = $_POST['TenDM'];
         $MoTa = $_POST['MoTa'];
-
         // Thực hiện truy vấn để thêm dữ liệu vào cơ sở dữ liệu
         $sql = "INSERT INTO danhmuc (TenDM, MoTa) VALUES (?, ?)";
         $stmt = $conn->prepare($sql);
@@ -186,37 +184,143 @@ function updateSach()
 
 }
 
+function deleteDM()
+{
+    $conn = connect_db();
+    
+    if (isset($_POST['MaDM'])) {
+        $maDMcanxoa = $_POST['MaDM'];
+
+        // Thực hiện câu lệnh xóa sách từ bảng sach
+        $sql_delete_book = "DELETE FROM danhmuc WHERE MaDM = $maDMcanxoa";
+
+        if (mysqli_query($conn, $sql_delete_book)) {
+            // Chuyển hướng người dùng đến trang danh sách sách sau khi xóa thành công
+            header('Location: index.php?act=listdm');
+            exit;
+        } else {
+            echo "Lỗi khi xóa sách: " . mysqli_error($conn);
+        }
+
+        // Đóng kết nối với cơ sở dữ liệu
+        mysqli_close($conn);
+    }
+}
+
+
+function deleteSach()
+{
+    $conn = connect_db();
+    // Lấy MaSach từ tham số GET
+
+    // Lấy MaSach từ tham số POST
+    if (isset ($_POST['MaSach'])) {
+        $maSachcanxoa = $_POST['MaSach'];
+
+        // Xóa tất cả các chương thuộc sách đó từ bảng chuong_sach
+        $sql_delete_chapters = "DELETE FROM chuong_sach WHERE sach_id = $maSachcanxoa";
+        if (mysqli_query($conn, $sql_delete_chapters)) {
+            // Tiến hành xóa sách từ bảng sach sau khi đã xóa hết các chương
+            $sql_delete_book = "DELETE FROM sach WHERE MaSach = $maSachcanxoa";
+            if (mysqli_query($conn, $sql_delete_book)) {
+                // Chuyển hướng người dùng đến trang danh sách sách sau khi xóa thành công
+                header('Location: index.php?act=listsach');
+                exit;
+            } else {
+                echo "Lỗi khi xóa sách: " . mysqli_error($conn);
+            }
+        } else {
+            echo "Lỗi khi xóa chương: " . mysqli_error($conn);
+        }
+
+        // Đóng kết nối với cơ sở dữ liệu
+        mysqli_close($conn);
+    }
+}
 
 // add Chương Mới
 function addChuong()
 {
     $conn = connect_db();
+    // Kiểm tra xem các trường có được gửi từ form hay không
+    if (isset ($_POST['MaSach'], $_POST['TenChuong'], $_POST['NoiDung'])) {
+        // Lấy dữ liệu từ form
+        $MaSach = $_POST['MaSach'];
+        $TenChuong = $_POST['TenChuong'];
+        $NoiDung = $_POST['NoiDung'];
 
-// Kiểm tra xem các trường có được gửi từ form hay không
-if(isset($_POST['MaSach'], $_POST['TenChuong'], $_POST['NoiDung'])) {
-    // Lấy dữ liệu từ form
-    $MaSach = $_POST['MaSach'];
-    $TenChuong = $_POST['TenChuong'];
-    $NoiDung = $_POST['NoiDung'];
-    
-    // Truy vấn để thêm chương mới vào cơ sở dữ liệu
-    $sql = "INSERT INTO chuong_sach (TenChuong, NoiDung, sach_id) VALUES ('$TenChuong', '$NoiDung', '$MaSach')";
-    
-    // Thực thi truy vấn
-    if (mysqli_query($conn, $sql)) {
-        echo "Thêm chương thành công!";
+        $sql_count = "SELECT COUNT(*) as SoChuong FROM chuong_sach WHERE sach_id = '$MaSach'";
+        $result_count = mysqli_query($conn, $sql_count);
+        $row_count = mysqli_fetch_assoc($result_count);
+
+        if ($row_count) {
+
+            $SoChuong = $row_count['SoChuong'] + 1;
+            $sql = "INSERT INTO chuong_sach (TenChuong, NoiDung, sach_id, SoChuong) VALUES ('$TenChuong', '$NoiDung', '$MaSach', '$SoChuong')";
+
+            // thực thi truy vấn
+            if (mysqli_query($conn, $sql)) {
+                echo "Thêm chương thành công!";
+                header('Location: index.php?act=listchuong&MaSach=' . $MaSach);
+                exit; //
+            } else {
+                echo "Lỗi: " . $sql . "<br>" . mysqli_error($conn);
+            }
+        } else {
+            // Xử lý trường hợp không có kết quả trả về từ truy vấn
+            echo "Không thể đếm số chương hiện có.";
+        }
+
     } else {
-        echo "Lỗi: " . $sql . "<br>" . mysqli_error($conn);
+        // // Nếu các trường không được gửi từ form, hiển thị thông báo lỗi
+        // echo "Vui lòng điền đầy đủ thông tin chương.";
+        // exit();
     }
-} else {
-    // Nếu các trường không được gửi từ form, hiển thị thông báo lỗi
-    echo "Vui lòng điền đầy đủ thông tin chương.";
-}
 
-// Đóng kết nối
-mysqli_close($conn);
+    // Đóng kết nối
+    mysqli_close($conn);
 
 }
 
+function deleteChuong()
+{
+    if (isset ($_POST['submit'])) {
+        if ($_POST['submit'] == 'xoa') {
+            $conn = connect_db();
 
+            $maChuongcanxoa = $_POST['MaChuong'];
+            // Đảm bảo biến $MaSach đã được gán giá trị từ URL
+            $MaSach = $_POST['MaSach']; // Giả sử bạn đã lấy giá trị MaSach từ URL
+
+            if (mysqli_query($conn, "DELETE FROM chuong_sach WHERE MaChuong = $maChuongcanxoa")) {
+
+                $sql_count = "SELECT COUNT(*) as SoChuong FROM chuong_sach WHERE sach_id = $MaSach";
+                $result_count = mysqli_query($conn, $sql_count);
+                $row_count = mysqli_fetch_array($result_count);
+                $SoChuongMoi = $row_count['SoChuong'];
+
+                // cập nhật số chương mới trong quyến sách
+                $sql_update_sach = "UPDATE chuong_sach set SoChuong = $SoChuongMoi where sach_id = $MaSach";
+                if (mysqli_query($conn, $sql_update_sach)) {
+                    echo "Xóa chương thành công";
+                } else {
+                    echo "Lỗi khi cập nhật số chương!";
+                }
+                mysqli_close($conn);
+                // Sử dụng biến $MaSach trong câu lệnh header
+                header("Location: index.php?act=listchuong&MaSach=$MaSach");
+                exit;
+            } else {
+                echo "Xóa không thành công!";
+            }
+        } else {
+            // Đảm bảo không có mã PHP nào được thực thi sau khi chuyển hướng
+        }
+    }
+}
+
+function updateChuong()
+{
+
+}
 ?>

@@ -19,20 +19,20 @@ if (isset($_GET['btnsearch'])) {
     $results = mysqli_query($conn, $query);
 }
 ?>
-
-<h1>Quản lý Khách Hàng</h1>
-<div class="search-container">
+<div class="content-header">
+<h2> Quản lý Khách Hàng</h2>
+    </div>
+    <div class="search-container">
     <form action="index.php" method="GET">
         <input type="hidden" name="act" value="listtaikhoan">
         <div class="search">
-            <label for="keyword">Tìm kiếm theo tên Khách hàng:</label>
-            <input type="text" name="keyword" id="keyword"
-                value="<?php echo isset ($_GET['keyword']) ? $_GET['keyword'] : ''; ?>">
+            <input type="text" placeholder="Tìm kiếm theo tên khách hàng" name="keyword" id="keyword" value="<?php echo isset($_GET['keyword']) ? $_GET['keyword'] : ''; ?>">
             <button type="submit" name="btnsearch">Tìm kiếm</button>
         </div>
     </form>
 </div>
-<div class="table-container">
+
+<div class="table-container113">
     <?php if ($results && mysqli_num_rows($results) > 0) { ?>
         <table class="table">
             <tr>
@@ -56,6 +56,7 @@ if (isset($_GET['btnsearch'])) {
         <p>Không có kết quả nào phù hợp.</p>
     <?php } ?>
 </div>
+
 
 <?php
 // Giải phóng bộ nhớ và đóng kết nối
