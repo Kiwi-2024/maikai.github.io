@@ -63,13 +63,9 @@ include "header.php";
                 case 'listchuong':
                     include "chuongsach/list_chuong.php";
                     break;
+
                 case 'listtaikhoan':
                     include "../taikhoan/list_taikhoan.php";
-                    break;
-
-                case 'updatechuong':
-                    updateChuong();
-                    include "chuongsach/update_chuong.php";
                     break;
 
                 case 'deletechuong':
@@ -78,7 +74,12 @@ include "header.php";
                     break;
 
                 case 'listnoidung':
-                    include "chuongsach/list_noidung.php";
+                    include "chuongsach/noidung.php";
+                    break;
+                
+                case 'updatenoidung':
+                    updateNoiDung();
+                    include "chuongsach/form_update.php";
                     break;
 
                 default:

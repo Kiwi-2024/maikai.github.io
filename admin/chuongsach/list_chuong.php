@@ -23,12 +23,9 @@ $result_chuong = mysqli_query($conn, $sql_chuong);
     </h2>
 </div>
 <div class="container">
-    <div class="action">
-        <a class="" href="index.php?act=addchuong&MaSach=<?php echo $row_sach['MaSach']; ?>">Thêm chương mới</a>
-    </div>
+        <a class="add-button" href="index.php?act=addchuong&MaSach=<?php echo $row_sach['MaSach']; ?>">Thêm chương mới</a>
     <?php
         $stt_chuong = 1; // Biến đếm số chương
-
         // Đếm số chương
         $total_chapters = mysqli_num_rows($result_chuong);
         echo "<tr><td colspan='3'>Tổng số chương: $total_chapters</td></tr>";
@@ -55,8 +52,9 @@ $result_chuong = mysqli_query($conn, $sql_chuong);
             <td>
                 <?php echo $stt_chuong++; ?> <!-- Hiển thị số chương -->
             </td>
-            <td><a class="delete-link"
-                    href="index.php?act=deletechuong&MaChuong=<?php echo $row_chuong['MaChuong']; ?>&MaSach=<?php echo $MaSach; ?>">Xóa</a>
+            <td>
+                <a class="delete-link" href="index.php?act=updatenoidung&MaChuong=<?php echo $row_chuong['MaChuong']; ?>&MaSach=<?php echo $MaSach; ?>">Update |</a>
+                <a class="delete-link" href="index.php?act=deletechuong&MaChuong=<?php echo $row_chuong['MaChuong']; ?>&MaSach=<?php echo $MaSach; ?>">Xóa</a>
             </td>
         </tr>
     <?php } ?>

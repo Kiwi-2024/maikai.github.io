@@ -290,7 +290,7 @@ function deleteChuong()
 
             $maChuongcanxoa = $_POST['MaChuong'];
             // Đảm bảo biến $MaSach đã được gán giá trị từ URL
-            $MaSach = $_POST['MaSach']; // Giả sử bạn đã lấy giá trị MaSach từ URL
+            $MaSach = $_POST['MaSach']; // Giả sử đã lấy giá trị MaSach từ URL
 
             if (mysqli_query($conn, "DELETE FROM chuong_sach WHERE MaChuong = $maChuongcanxoa")) {
 
@@ -319,8 +319,35 @@ function deleteChuong()
     }
 }
 
-function updateChuong()
+function updateNoiDung()
 {
+    $conn = connect_db();
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset ($_POST["MaChuong"])) {
 
+        
+        $MaSach = $_POST['MaSach'];
+        $MaChuong = $_POST['MaChuong'];
+        $TenChuong = $_POST['TenChuong'];
+        $NoiDung = $_POST['NoiDung'];
+
+        // Cập nhật thông tin danh mục trong cơ sở dữ liệu
+        $sql = "UPDATE chuong_sach SET TenChuong = '$TenChuong', NoiDung = '$NoiDung' WHERE MaChuong = '$MaChuong'";
+        if ($conn->query($sql) === true) {
+            echo 'Cập nhật thông tin chương thành công';
+            echo '<br>';
+            echo '<a href="index.php?act=listchuong&MaSach=' . $MaSach . '">Xem tất cả chương</a>';
+
+
+
+        } else {
+            echo 'Lỗi cập nhật thông tin chương:' . $conn->error;
+        }
+
+        // Đóng kết nối tới cơ sở dữ liệu
+        $conn->close();
+
+    } else {
+        // echo 'Yêu cầu không hợp lệ';
+    }
 }
 ?>
