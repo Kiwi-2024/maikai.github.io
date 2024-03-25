@@ -25,7 +25,7 @@ function addDanhMuc()
         $stmt->bind_param("ss", $TenDM, $MoTa);
 
         if ($stmt->execute()) {
-            echo "Danh mục đã được thêm thành công!";
+            echo "<div id='success-message' class='success-message'>Thêm danh mục thành công</div>";
         } else {
             echo "Lỗi: " . $sql . "<br>" . $conn->error;
         }
@@ -54,9 +54,9 @@ function updateDM()
         // Cập nhật thông tin danh mục trong cơ sở dữ liệu
         $sql = "UPDATE danhmuc SET TenDM = '$TenDM', MoTa = '$MoTa' WHERE MaDM = '$MaDM'";
         if ($conn->query($sql) === true) {
-            echo 'Cập nhật thông tin danh mục thành công';
-            echo '<br>';
-            echo '<a href="index.php?act=listdm">Xem tất cả danh mục</a>';
+            echo "<script>alert('Cập nhật thông tin sách thành công!');</script>";
+            echo "<script>window.location.href = 'index.php?act=listdm';</script>";
+            exit();
         } else {
             echo 'Lỗi cập nhật thông tin danh mục:' . $conn->error;
         }
@@ -100,8 +100,7 @@ function addSach()
             $stmt->bind_param("sssssss", $DanhMuc, $TenSach, $TacGia, $MoTa, $LoaiSach, $NamXuatBan, $HinhAnhBia);
 
             if ($stmt->execute()) {
-                echo "Sách '$TenSach' được thêm thành công!";
-                echo '<a href="index.php?act=listsach">Xem tất cả Quyển Sách</a>';
+                echo "<div id='success-message' class='success-message'>Thêm sách thành công</div>";
             } else {
                 echo "Lỗi: " . $sql . "<br>" . $conn->error;
             }
@@ -157,8 +156,8 @@ function updateSach()
                 // Cập nhật thông tin danh mục trong cơ sở dữ liệu
                 $sql_update = "UPDATE sach SET danhMucID = '$DanhMuc', TenSach = '$TenSach', TacGia = '$TacGia', MoTa = '$MoTa', LoaiSach = '$LoaiSach', NamXuatBan = '$NamXuatBan', HinhAnhBia = '$targetFile' WHERE MaSach = '$MaSach'";
                 if ($conn->query($sql_update) === true) {
-                    echo 'Cập nhập thông tin Sách thành công';
-                    echo '<a href="index.php?act=listsach">Xem tất cả Sách</a>';
+                    echo "<script>alert('Cập nhật thông tin sách thành công!');</script>";
+                    echo "<script>window.location.href = 'index.php?act=listsach';</script>";
                 } else {
                     echo 'Lỗi Cập nhật thông tin Sách:' . $conn->error;
                 }
@@ -169,9 +168,8 @@ function updateSach()
             // nếu người dùng không tải lên hình ảnh mới, chỉ cập nhật thông tin khác
             $sql_update = "UPDATE sach SET danhMucID = '$DanhMuc', TenSach = '$TenSach', TacGia = '$TacGia', MoTa = '$MoTa', LoaiSach = '$LoaiSach', NamXuatBan = '$NamXuatBan' WHERE MaSach = '$MaSach'";
             if ($conn->query($sql_update) === true) {
-                echo 'Cập nhật thông tin danh mục thành công';
-                echo '<br>';
-                echo '<a href="index.php?act=listsach">Xem tất cả Sách</a>';
+                echo "<script>alert('Cập nhật thông tin sách thành công!');</script>";
+                echo "<script>window.location.href = 'index.php?act=listsach';</script>";
             } else {
                 echo 'Lỗi cập nhật thông tin Sách:' . $conn->error;
             }
@@ -187,8 +185,8 @@ function updateSach()
 function deleteDM()
 {
     $conn = connect_db();
-    
-    if (isset($_POST['MaDM'])) {
+
+    if (isset ($_POST['MaDM'])) {
         $maDMcanxoa = $_POST['MaDM'];
 
         // Thực hiện câu lệnh xóa sách từ bảng sach
@@ -260,9 +258,10 @@ function addChuong()
 
             // thực thi truy vấn
             if (mysqli_query($conn, $sql)) {
-                echo "Thêm chương thành công!";
-                header('Location: index.php?act=listchuong&MaSach=' . $MaSach);
-                exit; //
+                echo "<script>alert('Thêm chương mới thành công!');</script>";
+                echo "<script>window.location.href = 'index.php?act=listchuong&MaSach=" . $MaSach . "';</script>";
+
+                exit();
             } else {
                 echo "Lỗi: " . $sql . "<br>" . mysqli_error($conn);
             }
@@ -302,7 +301,7 @@ function deleteChuong()
                 // cập nhật số chương mới trong quyến sách
                 $sql_update_sach = "UPDATE chuong_sach set SoChuong = $SoChuongMoi where sach_id = $MaSach";
                 if (mysqli_query($conn, $sql_update_sach)) {
-                    echo "Xóa chương thành công";
+                    echo "<div id='success-message' class='success-message'>Xóa chương thành công!</div>";
                 } else {
                     echo "Lỗi khi cập nhật số chương!";
                 }
@@ -324,7 +323,7 @@ function updateNoiDung()
     $conn = connect_db();
     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset ($_POST["MaChuong"])) {
 
-        
+
         $MaSach = $_POST['MaSach'];
         $MaChuong = $_POST['MaChuong'];
         $TenChuong = $_POST['TenChuong'];
@@ -333,14 +332,13 @@ function updateNoiDung()
         // Cập nhật thông tin danh mục trong cơ sở dữ liệu
         $sql = "UPDATE chuong_sach SET TenChuong = '$TenChuong', NoiDung = '$NoiDung' WHERE MaChuong = '$MaChuong'";
         if ($conn->query($sql) === true) {
-            echo 'Cập nhật thông tin chương thành công';
-            echo '<br>';
-            echo '<a href="index.php?act=listchuong&MaSach=' . $MaSach . '">Xem tất cả chương</a>';
+            echo "<script>alert('Cập Nhật nội dung thành công!');</script>";
+                echo "<script>window.location.href = 'index.php?act=listchuong&MaSach=" . $MaSach . "';</script>";
 
 
 
         } else {
-            echo 'Lỗi cập nhật thông tin chương:' . $conn->error;
+            echo 'Lỗi cập nhật thông nội dung chương:' . $conn->error;
         }
 
         // Đóng kết nối tới cơ sở dữ liệu

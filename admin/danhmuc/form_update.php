@@ -1,3 +1,4 @@
+
 <?php
     require_once '../db/db.php';
     if ($_SERVER["REQUEST_METHOD"] == "GET" && isset ($_GET['MaDM'])) {
@@ -17,6 +18,7 @@
         exit();
     }
 ?>
+
 <div class="content-header">
         <h2>Chỉnh sửa danh mục</h2>
     </div>

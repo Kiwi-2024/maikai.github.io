@@ -30,7 +30,7 @@
         </div>
         <div class="form-group">
             <label for="MoTa">Nội Dung</label>
-            <textarea name="NoiDung" id="MoTa"><?php echo $NoiDung; ?></textarea>
+            <textarea name="NoiDung" id="MoTa" class="noidung113"><?php echo $NoiDung; ?></textarea>
         </div>
         <div class="float">
         <button type="button" onclick="history.back()">HỦY</button>

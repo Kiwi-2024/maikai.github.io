@@ -1,17 +1,49 @@
 <?php
 // Kết nối tới cơ sở dữ liệu
 require_once "../db/db.php";
-// Thực hiện truy vấn SQL để lấy thông tin sách và số lượng chương
-$results = mysqli_query($conn, 'SELECT sach.*, COUNT(chuong_sach.MaChuong) AS SoChuong
-                                FROM sach
-                                LEFT JOIN chuong_sach ON sach.MaSach = chuong_sach.sach_id
-                                GROUP BY sach.MaSach
-                                ORDER BY SoChuong DESC');
+
+// Khởi tạo biến $results
+$results = null;
+
+if (isset($_GET['btnsearch'])) {
+    $keyword = mysqli_real_escape_string($conn, $_GET['keyword']);
+
+    if ($keyword !== '') {
+        $querysearch = "SELECT sach.*, COUNT(chuong_sach.MaChuong) AS SoChuong
+                        FROM sach
+                        LEFT JOIN chuong_sach ON sach.MaSach = chuong_sach.sach_id
+                        WHERE TenSach LIKE '%$keyword%'
+                        GROUP BY sach.MaSach
+                        ORDER BY MaSach DESC";
+        $results = mysqli_query($conn, $querysearch);
+    } else {
+        $results = mysqli_query($conn, 'SELECT sach.*, COUNT(chuong_sach.MaChuong) AS SoChuong
+                                        FROM sach
+                                        LEFT JOIN chuong_sach ON sach.MaSach = chuong_sach.sach_id
+                                        GROUP BY sach.MaSach
+                                        ORDER BY MaSach DESC');
+    }
+} else {
+    $results = mysqli_query($conn, 'SELECT sach.*, COUNT(chuong_sach.MaChuong) AS SoChuong
+                                    FROM sach
+                                    LEFT JOIN chuong_sach ON sach.MaSach = chuong_sach.sach_id
+                                    GROUP BY sach.MaSach
+                                    ORDER BY MaSach DESC');
+}
 ?>
 <div class="content-header">
-        <h2>Quản lý sách</h2>
-    </div>
-    <div class="container-2">
+    <h2>Quản lý sách</h2>
+</div>
+<div class="search-container">
+    <form action="index.php?act=listsach" method="GET">
+        <input type="hidden" name="act" value="listsach">
+        <div class="search">
+            <input type="text" placeholder="Tìm kiếm theo tên sách" name="keyword" id="keyword" value="<?php echo isset($_GET['keyword']) ? $_GET['keyword'] : ''; ?>">
+            <button type="submit" name="btnsearch">Tìm kiếm</button>
+        </div>
+    </form>
+</div>
+<div class="container-2">
     <a href="index.php?act=addsach" class="add-button">Thêm Sách Mới</a>
     <table class="table">
         <thead>
@@ -36,7 +68,7 @@ $results = mysqli_query($conn, 'SELECT sach.*, COUNT(chuong_sach.MaChuong) AS So
                     <td><?php echo $row['LoaiSach'] ?></td>
                     <td><?php echo $row['NamXuatBan'] ?></td>
                     <td><img src="<?php echo $row['HinhAnhBia'] ?>" alt="Hình ảnh bìa" width="150px"></td>
-                    <td><?php echo $row['SoChuong'] ?></td>
+                    <td><?php echo isset($row['SoChuong']) ? $row['SoChuong'] : '0'; ?></td>
                     <td>
                         <a href="index.php?act=updatesach&MaSach=<?php echo $row['MaSach']; ?>" class="link">Update</a>
                         <br>
@@ -53,5 +85,5 @@ $results = mysqli_query($conn, 'SELECT sach.*, COUNT(chuong_sach.MaChuong) AS So
 
 <?php
 mysqli_free_result($results);
-mysqli_close($conn)
-    ?>
+mysqli_close($conn);
+?>

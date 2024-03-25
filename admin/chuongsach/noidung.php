@@ -20,7 +20,8 @@ if (isset ($_GET['MaChuong'])) {
         <p>
         <div class="noidung">
         <p>Nội dung:</p>
-            <?php echo $row['NoiDung']; ?>
+        <div class="noidung11p">
+            <?php echo $row['NoiDung']; ?></div>
         </div>
         </p>
         </div>
