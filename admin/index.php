@@ -89,7 +89,7 @@ include "header.php";
             echo "Yêu cầu không hợp lệ!";
         }
     } else {
-        echo "<a href='../taikhoan/login.php'>Đăng nhập</a>";
+        echo "<a href='../index.php'>Đăng nhập</a>";
     }
     ?>
 

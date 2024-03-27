@@ -1,9 +1,6 @@
-<?php require_once "header.php"; ?>
-<div class="slider">
-        <div class="slider-image">
-            <img src="img/3268.png" alt="">
-        </div>
-    </div>
+<?php
+include "header.php";
+?>
 <div class="div-112">
     <div class="div-113">
         <h2>Sách miễn phí</h2>
@@ -30,7 +27,6 @@
                 <div class="sach1">
                     <img src="admin/<?php echo $row1['HinhAnhBia']; ?>" alt="">
                     <a href="mota.php?MaSach=<?php echo $row1['MaSach']; ?>">
-
                         <p>
                             <?php echo $row1['TenSach']; ?>
                         </p>
@@ -59,6 +55,6 @@
         </div>
     </div>
 </div>
-
-
-<?php require_once "footer.php"; ?>
+<?php
+include "footer.php";
+?>

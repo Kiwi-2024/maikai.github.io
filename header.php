@@ -1,3 +1,14 @@
+<?php
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+require_once ('db/db.php');
+$sachmienphi = mysqli_query($conn, "SELECT * FROM sach where LoaiSach = 'MienPhi'");
+$MoiNhat = mysqli_query($conn, "SELECT * FROM sach");
+$TacPhamKinhDien = mysqli_query($conn, "SELECT * FROM sach where danhMucID = '37'");
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,51 +22,51 @@
 
 <body>
     <header>
+        <a href="index.php">
         <h2 class="logo">MAKA</h2>
+        </a>
         <div id="countdown"></div>
         <div class="maka1">
             <nav class="navigation">
-                <a href="#section1" class="pgp">Home</a>
-                <a href=".container" id="About" class="pgp">Sách điện tử</a>
+                <a href="sachdientu.php" class="pgp">Sách điện tử</a>
+                <a href=".container" id="About" class="pgp">Sách nói</a>
+                <a href="#seemore" class="pgp">Sách hiệu sồi</a>
                 <a href="#seemore" class="pgp">Sách tóm tắt</a>
-                <a href="#footer" class="pgp">Liên Hệ</a>
+                <a href="#footer" class="pgp">Podcast</a>
             </nav>
         </div>
         <div class="nav1-c">
             <div class="form-search">
                 <form action="#" method="GET" id="form-">
-                    <div class="parent">
-                        <input id="Search" class="input" type="type" placeholder="Search..." oninput="searchUser()"/>
-                        <button class="btn1">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                        </button>
+                    <div class="box">
+                        <div class="container-2">
+                            
+                            <input type="search" id="search" placeholder="Search..." />
+                            <span class="icon1"><ion-icon name="search"></ion-icon></span>
+                        </div>
                     </div>
                 </form>
-                <a href="#"><button class="goicuoc">Gói cước</button></a>
+
             </div>
 
-            <div class="form-submit">
-                <?php
-                session_start();
-                if (isset ($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
-                    echo "Chào mừng " . $_SESSION['HoTen'] . " đã đăng nhập!";
-                    echo "<a href='taikhoan/logout.php'>Đăng xuất</a>";
-                } else {
-                    echo "<a href='#'><button class='btnLogin-popup'>Đăng Ký</button></a>";
-                    echo "<a href='#'><button class='btnLogin-popup'>Đăng Nhập</button></a>";
+            <div class="goicuoc"><a href="#"><button>Gói Cước</button></a></div>
+                <div class="form-submit">
+                    <?php
+                    if (isset ($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
+                        echo $_SESSION['HoTen'];
+                        echo "<a href='taikhoan/logout.php'>Đăng xuất</a>";
+                    } else {
+                        echo "<a href='#'><button class='btnLogin-popup'>Đăng Nhập</button></a>";
 
-                }
-                ?>
+                    }
+                    ?>
 
+                
             </div>
         </div>
         <!-- <button id="trangden"><ion-icon name="contrast"></ion-icon></button> -->
 
     </header>
-    <div class="slider">
-        <img src="img/3268.png" alt="">
-    </div>
-
 
     <div id="section1">
     </div>
@@ -68,15 +79,15 @@
             <h2>Đăng Nhập</h2>
             <div class="form-logo1">
                 <div class="code-qr"></div>
-                <form action="#" class="form-var">
+                <form action="taikhoan/login.php" class="form-var" method="post">
                     <div class="input-box">
                         <span class="icon"><ion-icon name="mail"></ion-icon></span>
-                        <input type="email" required>
+                        <input type="email" required name="Email">
                         <label>Email</label>
                     </div>
                     <div class="input-box">
                         <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
-                        <input type="password" required minlength="8">
+                        <input type="password" required minlength="8" name="MatKhau">
                         <label>Password</label>
                     </div>
                     <div class="remember-forgot">
@@ -93,32 +104,37 @@
             </div>
         </div>
         <div class="from-box register">
-            <h2>Đăng Ký</h2>
+            <h2 class="h2">Đăng Ký</h2>
             <div class="form-logo1">
                 <div class="code-qr"></div>
-                <form action="#">
-
+                <form action="taikhoan/register.php" method="post">
                     <div class="input-box">
-                        <span class="icon">
-                            <ion-icon name="finger-print"></ion-icon>
-                        </span>
-                        <input type="text" id="registerPhone" name="registerPhone" required>
-                        <label>Số điện thoại</label>
-                        <span id="phoneError" class="error-message"></span>
+                        <span class="icon"><ion-icon name="person"></ion-icon></span>
+                        <input type="HoTen" required name="HoTen">
+                        <label>Họ Tên</label>
                     </div>
-
                     <div class="input-box">
                         <span class="icon"><ion-icon name="mail"></ion-icon></span>
-                        <input type="email" required>
+                        <input type="email" required name="Email">
                         <label>Email</label>
                     </div>
                     <div class="input-box">
+                        <span class="icon">
+                            <ion-icon name="call"></ion-icon>
+                        </span>
+                        <input type="text" id="registerPhone" name="SoDienThoai" required>
+                        <label>Số điện thoại</label>
+                        <span id="phoneError" class="error-message"></span>
+                    </div>
+                    <div class="input-box">
                         <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
-                        <input type="password" required minlength="8">
+                        <input type="password" required minlength="8" name="MatKhau">
                         <label>Password</label>
-
-                        <!-- <label for="registerMedia">Media:</label>
-      <input type="file" id="registerMedia" name="registerMedia" accept="image/*, video/*"> -->
+                    </div>
+                    <div class="input-box">
+                        <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
+                        <input type="password" required minlength="8" name="confirm_password">
+                        <label>Nhập lại password</label>
                     </div>
                     <div class="remember-forgot">
                         <label><input type="checkbox">Tôi đồng ý với tất cả điều khoản</label>

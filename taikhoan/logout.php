@@ -6,6 +6,6 @@ unset($_SESSION['Email']);
 unset($_SESSION['VaiTro']);
 
 // Sau đó chuyển hướng người dùng đến trang đăng nhập
-header("Location: login.php");
+header("Location: ../index.php");
 exit;
 ?>
