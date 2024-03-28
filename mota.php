@@ -3,13 +3,13 @@ include "header.php";
 ?>
 <?php
 // Kiểm tra nếu tham số "MaSach" được truyền qua URL
-if (isset ($_GET['MaSach'])) {
+if (isset($_GET['MaSach'])) {
     // Lấy giá trị của tham số "MaSach"
     $MaSach = $_GET['MaSach'];
     require "db/db.php";
     // Kiểm tra kết nối
     if (!$conn) {
-        die ("Kết nối không thành công: " . mysqli_connect_error());
+        die("Kết nối không thành công: " . mysqli_connect_error());
     }
 
     // Thực hiện truy vấn để lấy thông tin sách dựa trên MaSach
@@ -50,7 +50,7 @@ if (isset ($_GET['MaSach'])) {
                 <div class="div-mota">
                     <div class="back">
                         <a href="index.php">Trang Chủ > </a>
-                        <a href="#"> 
+                        <a href="#">
                             <?php echo $row['TenSach'] ?>
                         </a>
                     </div>
@@ -95,8 +95,12 @@ if (isset ($_GET['MaSach'])) {
                             <hr class="hr">
                             <div class="box-name1">
                                 <div class="chonnoidung">
-                                    <div class="loaisach">Chọn loại sách: <button><p>Sách điện tử</p></button></div>
-                                    <div class="loaisach">Chọn nội dung: <button><p>Đầy đủ</p></button></div>
+                                    <div class="loaisach">Chọn loại sách: <button>
+                                            <p>Sách điện tử</p>
+                                        </button></div>
+                                    <div class="loaisach">Chọn nội dung: <button>
+                                            <p>Đầy đủ</p>
+                                        </button></div>
                                 </div>
                                 <div class="buton-btn">
                                     <button class="docsach">Đọc sách</button>
@@ -108,6 +112,54 @@ if (isset ($_GET['MaSach'])) {
                                 </div>
                                 <div class="comment">
                                     <h4>Bình luận</h4>
+
+                                    <?php
+                                    if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
+                                        echo "<a href='#'><button class='btnLogin-popup2 acc11'>Đánh giá và nhận xét</button></a>";
+                                        ?>
+                                    <button class="btn113">Đánh giá & nhận xét</button>
+                                        <div class="danhgia">
+                                        <form action="admin/index.php?act=nhanxet" method="post">
+                                            <h2>Đánh giá & Nhận xét</h2>
+                                            <span class="icon-close1"><ion-icon name="close"></ion-icon></span>
+                                            <input type="hidden" name="MaSach" value="<?php echo $MaSach; ?>">
+                                            <div class="row-radio">
+                                                <label for="radio">Đánh Giá </label>
+                                                <div class="star_wrap">
+                                                    <input type="radio" name="rate" value="5">
+                                                    <input type="radio" name="rate" value="4">
+                                                    <input type="radio" name="rate" value="3">
+                                                    <input type="radio" name="rate" value="2">
+                                                    <input type="radio" name="rate" value="1">
+                                                </div>
+                                            </div>
+                                            <div class="row-nhanxet">
+                                                <label for="NhanXet">Nhận xét </label>
+                                                <textarea name="NhanXet" id="nhanxet" maxlength="300"
+                                                    placeholder="Hảy cho chúng mình một vài nhận xét và đống góp ý kiến nhé"></textarea>
+                                            </div>
+                                            <button type="submit" class="btn-sub">Gửi nhận xét</button>
+                                        </form>
+                                    </div>
+                                        <?php
+                                    } else {
+                                        echo "<a href='#'><button class='btnLogin-popup2'>Đánh giá và nhận xét</button></a>";
+                                    }
+                                    ?>
+
+                                    <?php
+                                    if ($result_danhgia_nhanxet->num_rows > 0) {
+                                        while ($row_danhgia = $result_danhgia_nhanxet->fetch_assoc()) {
+                                            echo "Tên Sách: " . $row_danhgia["TenSach"] . "<br>"; // Hiển thị tên sách thay vì ID sách
+                                            echo "Tên Người Dùng: " . $row_danhgia["HoTen"] . "<br>"; // Hiển thị tên người dùng thay vì mã người dùng
+                                            echo "Nhận Xét: " . $row_danhgia["NhanXet"] . "<br>";
+                                            echo "Đánh Giá: " . $row_danhgia["DanhGia"] . "<br>";
+                                            echo "Thời Gian Thêm: " . $row_danhgia["ThoiGianThem"] . "<br>";
+                                        }
+                                    }
+                                    ?>
+                                    
+                                    
                                 </div>
 
                             </div>

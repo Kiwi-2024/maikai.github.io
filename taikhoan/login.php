@@ -25,6 +25,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $_SESSION['loggedin'] = true;
         $_SESSION['Email'] = $row['Email'];
         $_SESSION['HoTen'] = $row['HoTen'];
+        $_SESSION['MaKH'] = $row['MaKH'];
         $_SESSION['VaiTro'] = $row['VaiTro'];
         
         // Nếu vai trò là admin, chuyển hướng tới trang admin

@@ -7,6 +7,11 @@ $sachmienphi = mysqli_query($conn, "SELECT * FROM sach where LoaiSach = 'MienPhi
 $MoiNhat = mysqli_query($conn, "SELECT * FROM sach");
 $TacPhamKinhDien = mysqli_query($conn, "SELECT * FROM sach where danhMucID = '37'");
 
+$sql_danhgia_nhanxet = "SELECT danhgia_nhanxet.MaDG, sach.TenSach, khach_hang.HoTen, danhgia_nhanxet.NhanXet, danhgia_nhanxet.DanhGia, danhgia_nhanxet.ThoiGianThem 
+FROM danhgia_nhanxet 
+INNER JOIN sach ON danhgia_nhanxet.sach_id = sach.MaSach 
+INNER JOIN khach_hang ON danhgia_nhanxet.nguoi_dung_id = khach_hang.MaKH";
+$result_danhgia_nhanxet = $conn->query($sql_danhgia_nhanxet);
 
 ?>
 <!DOCTYPE html>
@@ -23,7 +28,7 @@ $TacPhamKinhDien = mysqli_query($conn, "SELECT * FROM sach where danhMucID = '37
 <body>
     <header>
         <a href="index.php">
-        <h2 class="logo">MAKA</h2>
+            <h2 class="logo">MAKA</h2>
         </a>
         <div id="countdown"></div>
         <div class="maka1">
@@ -40,7 +45,7 @@ $TacPhamKinhDien = mysqli_query($conn, "SELECT * FROM sach where danhMucID = '37
                 <form action="#" method="GET" id="form-">
                     <div class="box">
                         <div class="container-2">
-                            
+
                             <input type="search" id="search" placeholder="Search..." />
                             <span class="icon1"><ion-icon name="search"></ion-icon></span>
                         </div>
@@ -50,18 +55,19 @@ $TacPhamKinhDien = mysqli_query($conn, "SELECT * FROM sach where danhMucID = '37
             </div>
 
             <div class="goicuoc"><a href="#"><button>Gói Cước</button></a></div>
-                <div class="form-submit">
-                    <?php
-                    if (isset ($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
-                        echo $_SESSION['HoTen'];
-                        echo "<a href='taikhoan/logout.php'>Đăng xuất</a>";
-                    } else {
-                        echo "<a href='#'><button class='btnLogin-popup'>Đăng Nhập</button></a>";
+            <div class="form-submit">
+                <?php
+                if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
+                    echo $_SESSION['HoTen'];
+                    echo "<a href='taikhoan/logout.php'>Đăng xuất</a>";
+                    echo "<a href='#'><button class='btnLogin-popup acc11'>Đăng Nhập</button></a>";
+                } else {
+                    echo "<a href='#'><button class='btnLogin-popup'>Đăng Nhập</button></a>";
+                }
+                ?>
 
-                    }
-                    ?>
 
-                
+
             </div>
         </div>
         <!-- <button id="trangden"><ion-icon name="contrast"></ion-icon></button> -->

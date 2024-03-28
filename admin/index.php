@@ -81,7 +81,9 @@ include "header.php";
                     updateNoiDung();
                     include "chuongsach/form_update.php";
                     break;
-
+                case 'nhanxet':
+                    NhanXet();
+                    break;
                 default:
                     break;
             }
