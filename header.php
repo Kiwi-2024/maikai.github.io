@@ -1,18 +1,5 @@
 <?php
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
-require_once ('db/db.php');
-$sachmienphi = mysqli_query($conn, "SELECT * FROM sach where LoaiSach = 'MienPhi'");
-$MoiNhat = mysqli_query($conn, "SELECT * FROM sach");
-$TacPhamKinhDien = mysqli_query($conn, "SELECT * FROM sach where danhMucID = '37'");
-
-$sql_danhgia_nhanxet = "SELECT danhgia_nhanxet.MaDG, sach.TenSach, khach_hang.HoTen, danhgia_nhanxet.NhanXet, danhgia_nhanxet.DanhGia, danhgia_nhanxet.ThoiGianThem 
-FROM danhgia_nhanxet 
-INNER JOIN sach ON danhgia_nhanxet.sach_id = sach.MaSach 
-INNER JOIN khach_hang ON danhgia_nhanxet.nguoi_dung_id = khach_hang.MaKH";
-$result_danhgia_nhanxet = $conn->query($sql_danhgia_nhanxet);
-
+require_once "connect_model/model.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -60,7 +47,7 @@ $result_danhgia_nhanxet = $conn->query($sql_danhgia_nhanxet);
                 if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
                     echo $_SESSION['HoTen'];
                     echo "<a href='taikhoan/logout.php'>Đăng xuất</a>";
-                    echo "<a href='#'><button class='btnLogin-popup acc11'>Đăng Nhập</button></a>";
+                    
                 } else {
                     echo "<a href='#'><button class='btnLogin-popup'>Đăng Nhập</button></a>";
                 }

@@ -2,12 +2,11 @@
 include "header.php";
 ?>
 <?php
-// Kiểm tra nếu tham số "MaSach" được truyền qua URL
+// Kiểm tra nếu tham số MaSach được truyền qua URL
 if (isset($_GET['MaSach'])) {
-    // Lấy giá trị của tham số "MaSach"
+
     $MaSach = $_GET['MaSach'];
     require "db/db.php";
-    // Kiểm tra kết nối
     if (!$conn) {
         die("Kết nối không thành công: " . mysqli_connect_error());
     }
@@ -18,26 +17,21 @@ if (isset($_GET['MaSach'])) {
 
     // Kiểm tra kết quả truy vấn
     if (mysqli_num_rows($result_sach) > 0) {
-        // Lặp qua từng hàng kết quả và hiển thị thông tin sách
+
         while ($row = mysqli_fetch_assoc($result_sach)) {
             // Lấy danh mục ID từ sách
             $danhMucID = $row['danhMucID'];
 
-            // Truy vấn để lấy tên danh mục dựa trên mã danh mục
             $query_danhmuc = "SELECT TenDM FROM danhmuc WHERE MaDM = $danhMucID";
             $result_danhmuc = mysqli_query($conn, $query_danhmuc);
 
-            // Kiểm tra kết quả truy vấn danh mục
             if ($result_danhmuc && mysqli_num_rows($result_danhmuc) > 0) {
-                // Lấy tên danh mục từ kết quả truy vấn
                 $row_danhmuc = mysqli_fetch_assoc($result_danhmuc);
                 $tenDanhMuc = $row_danhmuc['TenDM'];
 
-                // Lấy số lượng chương từ bảng chương dựa trên MaChuong của sách
                 $query_so_chuong = "SELECT COUNT(*) AS SoChuong FROM chuong_sach WHERE sach_id = $MaSach";
                 $result_so_chuong = mysqli_query($conn, $query_so_chuong);
 
-                // Kiểm tra kết quả truy vấn số lượng chương
                 if ($result_so_chuong) {
                     $row_so_chuong = mysqli_fetch_assoc($result_so_chuong);
                     $soLuongChuong = $row_so_chuong['SoChuong'];
@@ -45,7 +39,6 @@ if (isset($_GET['MaSach'])) {
                     $soLuongChuong = 0;
                 }
 
-                // Hiển thị thông tin sách và số lượng chương
                 ?>
                 <div class="div-mota">
                     <div class="back">
@@ -111,55 +104,92 @@ if (isset($_GET['MaSach'])) {
                                     </p>
                                 </div>
                                 <div class="comment">
-                                    <h4>Bình luận</h4>
-
+                                    <h3>Đọc giả nói gì về ❝
+                                        <?php echo $row['TenSach'] ?>❞
+                                    </h3>
+                                    <h4>Đánh giá và nhận xét</h4>
+                                    <hr>
                                     <?php
                                     if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
-                                        echo "<a href='#'><button class='btnLogin-popup2 acc11'>Đánh giá và nhận xét</button></a>";
                                         ?>
-                                    <button class="btn113">Đánh giá & nhận xét</button>
+                                        <div class="danhgia-button">
+                                            <button class="btn113"><ion-icon name="create-outline"></ion-icon>
+                                                <p>Viết đánh giá</p>
+                                            </button>
+                                        </div>
                                         <div class="danhgia">
-                                        <form action="admin/index.php?act=nhanxet" method="post">
-                                            <h2>Đánh giá & Nhận xét</h2>
-                                            <span class="icon-close1"><ion-icon name="close"></ion-icon></span>
-                                            <input type="hidden" name="MaSach" value="<?php echo $MaSach; ?>">
-                                            <div class="row-radio">
-                                                <label for="radio">Đánh Giá </label>
-                                                <div class="star_wrap">
-                                                    <input type="radio" name="rate" value="5">
-                                                    <input type="radio" name="rate" value="4">
-                                                    <input type="radio" name="rate" value="3">
-                                                    <input type="radio" name="rate" value="2">
-                                                    <input type="radio" name="rate" value="1">
+                                            <form action="admin/index.php?act=nhanxet" method="post">
+                                                <h2>Đánh giá & Nhận xét</h2>
+                                                <span class="icon-close1"><ion-icon name="close"></ion-icon></span>
+                                                <input type="hidden" name="MaSach" value="<?php echo $MaSach; ?>">
+                                                <div class="row-radio">
+                                                    <label for="radio">Đánh Giá </label>
+                                                    <div class="star_wrap">
+                                                        <input type="radio" name="rate" value="5">
+                                                        <input type="radio" name="rate" value="4">
+                                                        <input type="radio" name="rate" value="3">
+                                                        <input type="radio" name="rate" value="2">
+                                                        <input type="radio" name="rate" value="1">
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="row-nhanxet">
-                                                <label for="NhanXet">Nhận xét </label>
-                                                <textarea name="NhanXet" id="nhanxet" maxlength="300"
-                                                    placeholder="Hảy cho chúng mình một vài nhận xét và đống góp ý kiến nhé"></textarea>
-                                            </div>
-                                            <button type="submit" class="btn-sub">Gửi nhận xét</button>
-                                        </form>
-                                    </div>
+                                                <div class="row-nhanxet">
+                                                    <label for="NhanXet">Nhận xét </label>
+                                                    <textarea name="NhanXet" id="nhanxet" maxlength="300"
+                                                        placeholder="Hảy cho chúng mình một vài nhận xét và đống góp ý kiến nhé"></textarea>
+                                                </div>
+                                                <button type="submit" class="btn-sub">Gửi nhận xét</button>
+                                            </form>
+                                        </div>
                                         <?php
                                     } else {
-                                        echo "<a href='#'><button class='btnLogin-popup2'>Đánh giá và nhận xét</button></a>";
+
+                                        echo "<div class='thongbao'><p>Vui lòng đăng nhập để nhận xét</p></div>";
                                     }
                                     ?>
 
                                     <?php
+
+                                    // Truy vấn SQL để lấy thông tin về bình luận của khách hàng đó cho sách cụ thể
+                                    $sql_danhgia_nhanxet = "SELECT dn.MaDG, s.TenSach, kh.HoTen, dn.NhanXet, dn.DanhGia, 
+                                DATE_FORMAT(dn.ThoiGianThem, '%d/ %m/ %Y') AS ThoiGianThem 
+                                FROM danhgia_nhanxet dn
+                                INNER JOIN sach s ON dn.sach_id = s.MaSach 
+                                INNER JOIN khach_hang kh ON dn.nguoi_dung_id = kh.MaKH
+                                WHERE dn.sach_id = $MaSach";
+
+                                    // Thực thi truy vấn
+                                    $result_danhgia_nhanxet = $conn->query($sql_danhgia_nhanxet);
                                     if ($result_danhgia_nhanxet->num_rows > 0) {
                                         while ($row_danhgia = $result_danhgia_nhanxet->fetch_assoc()) {
-                                            echo "Tên Sách: " . $row_danhgia["TenSach"] . "<br>"; // Hiển thị tên sách thay vì ID sách
-                                            echo "Tên Người Dùng: " . $row_danhgia["HoTen"] . "<br>"; // Hiển thị tên người dùng thay vì mã người dùng
-                                            echo "Nhận Xét: " . $row_danhgia["NhanXet"] . "<br>";
-                                            echo "Đánh Giá: " . $row_danhgia["DanhGia"] . "<br>";
-                                            echo "Thời Gian Thêm: " . $row_danhgia["ThoiGianThem"] . "<br>";
+                                            ?>
+                                            <div class="form-danhgia">
+                                                <div class="img-name">
+                                                    <div class="flex-pp">
+                                                        <img src="img/b2d4a77ce9ae88fea6f1fe1054f552d3.jpg" alt="">
+                                                        <p>
+                                                            <?php echo $row_danhgia["HoTen"]; ?>
+                                                        </p>
+                                                    </div>
+                                                    <p>
+                                                        <?php echo $row_danhgia["ThoiGianThem"]; ?>
+                                                    </p>
+                                                </div>
+                                                <div class="comment-form">
+                                                    <p>
+                                                        <?php echo $row_danhgia["NhanXet"]; ?>
+                                                    </p>
+                                                    <x>
+                                                        <?php echo $row_danhgia["DanhGia"]; ?>
+                                                    </x>
+                                                </div>
+                                            </div>
+                                            <?php
+                                            // echo "Tên Sách: " . $row_danhgia["TenSach"] . "<br>";
                                         }
                                     }
                                     ?>
-                                    
-                                    
+
+
                                 </div>
 
                             </div>

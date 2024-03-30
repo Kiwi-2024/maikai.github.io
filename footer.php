@@ -1,33 +1,32 @@
 <script  type = "module"  src = "https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"> </script> 
 <script> 
+document.addEventListener('DOMContentLoaded', function() {
     const voboclogin = document.querySelector('.voboclogin');
-const linkdangnhap = document.querySelector('.linkdangnhap');
-const linkdangky = document.querySelector('.linkdangky');
-const iconclose = document.querySelector('.icon-close');
-const btnCuaso = document.querySelector('.btnLogin-popup');
-const btnCuaso2 = document.querySelector('.btnLogin-popup2');
+    const linkdangnhap = document.querySelector('.linkdangnhap');
+    const linkdangky = document.querySelector('.linkdangky');
+    const iconclose = document.querySelector('.icon-close');
+    const btnCuaso = document.querySelector('.btnLogin-popup');
 
-//-------------------------------------------------
-btnCuaso2.addEventListener('click', () => {
-    voboclogin.classList.add('active-popup');
+    if (linkdangnhap && linkdangky && iconclose && btnCuaso && voboclogin) {
+        linkdangky.addEventListener('click', () => {
+            voboclogin.classList.add('active');
+        });
+
+        linkdangnhap.addEventListener('click', () => {
+            voboclogin.classList.remove('active');
+        });
+
+        btnCuaso.addEventListener('click', () => {
+            voboclogin.classList.add('active-popup');
+        });
+
+        iconclose.addEventListener('click', () => {
+            voboclogin.classList.remove('active-popup');
+        });
+    } else {
+        console.error("Không thể tìm thấy một hoặc nhiều phần tử!");
+    }
 });
-
-linkdangky.addEventListener('click', () => {
-    voboclogin.classList.add('active');
-});
-
-linkdangnhap.addEventListener('click', () => {
-    voboclogin.classList.remove('active');
-});
-
-btnCuaso.addEventListener('click', () => {
-    voboclogin.classList.add('active-popup');
-});
-
-iconclose.addEventListener('click', () => {
-    voboclogin.classList.remove('active-popup');
-});
-
 
 
 

@@ -5,7 +5,7 @@ include "header.php";
 <div class="user-info">
     <?php
     session_start();
-    if (isset ($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
+    if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
         echo "<div class='user-info1'>";
         echo "" . $_SESSION['HoTen'] . " đã đăng nhập!";
         echo "<a href='../index.php'>Trang chủ</a>";
@@ -14,7 +14,7 @@ include "header.php";
         // ======================================
     
         // controller
-        if (isset ($_GET['act'])) {
+        if (isset($_GET['act'])) {
             $act = $_GET['act'];
             switch ($act) {
                 case 'adddm':
@@ -76,13 +76,17 @@ include "header.php";
                 case 'listnoidung':
                     include "chuongsach/noidung.php";
                     break;
-                
+
                 case 'updatenoidung':
                     updateNoiDung();
                     include "chuongsach/form_update.php";
                     break;
                 case 'nhanxet':
                     NhanXet();
+                    break;
+
+                case 'audiofile':
+                    audioFile();
                     break;
                 default:
                     break;
