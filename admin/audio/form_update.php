@@ -5,15 +5,14 @@ require_once '../db/db.php';
 if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['MaSach'])) {
     $MaSach = $conn->real_escape_string($_GET['MaSach']);
 
-    $sql_sach = "SELECT * FROM sach WHERE MaSach = '$MaSach'";
+    $sql_sach = "SELECT * FROM sach_noi WHERE MaSach = '$MaSach'";
     $result_sach = $conn->query($sql_sach);
 
     if ($result_sach && $result_sach->num_rows == 1) {
         $row_sach = $result_sach->fetch_assoc();
         $TenSach = $row_sach['TenSach'];
-        $TacGia = $row_sach['TacGia'];
+        $Sach_url = $row_sach['Sach_url'];
         $MoTa = $row_sach['MoTa'];
-        $LoaiSach = $row_sach['LoaiSach'];
         $NamXuatBan = $row_sach['NamXuatBan'];
         $DanhMuc = $row_sach['danhMucID']; // Sửa ở đây để lấy danh mục
         $HinhAnhBia = $row_sach['HinhAnhBia'];
@@ -28,10 +27,10 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['MaSach'])) {
 
 ?>
 <div class="content-header">
-        <h2>Chỉnh sửa sách</h2>
+        <h2>Chỉnh sửa sách nói</h2>
     </div>
 <div class="container-1">
-    <form action="index.php?act=updatesach" class="form1 form2" method="POST" enctype="multipart/form-data">
+    <form action="index.php?act=updatesachnoi" class="form1 form2" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="MaSach" value="<?php echo $MaSach; ?>">
         <div class="box-pp">
         <div class="form-group1">
@@ -59,15 +58,8 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['MaSach'])) {
             <input type="text" name="TenSach" id="TenSach" value="<?php echo $TenSach; ?>">
         </div>
         <div class="form-group1">
-            <label for="TacGia">Tên Tác Giả:</label>
-            <input type="text" name="TacGia" id="TacGia" value="<?php echo $TacGia; ?>">
-        </div>
-        <div class="form-group1">
-            <label for="LoaiSach">Loại sách:</label>
-            <select name="LoaiSach" class="select-box">
-                <option class="option" value="MienPhi" <?php if ($LoaiSach == 'MienPhi') echo 'selected'; ?>>Sách miễn phí</option>
-                <option class="option" value="HoiVien" <?php if ($LoaiSach == 'HoiVien') echo 'selected'; ?>>Sách Hội Viên</option>
-            </select>
+            <label for="MyAudio">File Audio:</label>
+            <input type="file" name="MyAudio" id="MyAudio">
         </div>
         </div>
         <div class="box-pp">

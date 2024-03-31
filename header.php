@@ -22,7 +22,7 @@ require_once "connect_model/model.php";
             <nav class="navigation">
                 <a href="sachdientu.php" class="pgp">Sách điện tử</a>
                 <a href=".container" id="About" class="pgp">Sách nói</a>
-                <a href="#seemore" class="pgp">Sách hiệu sồi</a>
+                <a href="sachhieusoi.php" class="pgp">Sách hiệu sồi</a>
                 <a href="#seemore" class="pgp">Sách tóm tắt</a>
                 <a href="#footer" class="pgp">Podcast</a>
             </nav>

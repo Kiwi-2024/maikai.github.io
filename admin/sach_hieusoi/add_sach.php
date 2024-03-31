@@ -1,15 +1,15 @@
 <div class="content-header">
-        <h2>Thêm sách mới</h2>
+        <h2>Thêm sách hiệu sồi mới</h2>
     </div>
 <div class="container-1">
-    <form action="index.php?act=addsach" method="post" enctype="multipart/form-data" class="form1 form2">
+    <form action="index.php?act=addsachhieusoi" method="post" enctype="multipart/form-data" class="form1 form2">
     <div class="box-pp">
     <div class="form-group1">
             <label for="category">Danh mục:</label>
             <select name="DanhMuc" id="category" class="select-box">
                 <?php
                 require_once "../db/db.php";
-                $sql = "SELECT MaDM, TenDM FROM danhmuc";
+                $sql = "SELECT MaDM, TenDM FROM danhmuc_sachsoi";
                 $result = mysqli_query($conn, $sql);
 
                 if (mysqli_num_rows($result) > 0) {
@@ -33,11 +33,8 @@
             <input type="text" name="TacGia" required>
         </div>
         <div class="form-group1">
-            <label for="loaisach">Loại sách:</label>
-            <select name="LoaiSach" id="loaisach" class="select-box">
-                <option value="MienPhi" class="option">Sách miễn phí</option>
-                <option value="HoiVien" class="option">Sách Hội Viên</option>
-            </select>
+            <label for="Gia">Giá:</label>
+            <input type="number" name="Gia" required>
         </div>
         </div>
         <div class="box-pp">

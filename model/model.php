@@ -3,20 +3,16 @@ function connect_db()
 {
     $conn = mysqli_connect('localhost', 'root', 'phamngoctam', 'du_an_1_2024');
     if (!$conn) {
-        die ('Kết nối cơ sở dữ liệu thất bại');
+        die('Kết nối cơ sở dữ liệu thất bại');
     }
     return $conn;
 }
 
 function addDanhMuc()
 {
-    // Kiểm tra xác thực và xử lý dữ liệu từ biểu mẫu HTML
-    if (isset ($_POST['TenDM']) && isset ($_POST['MoTa'])) {
-        // Kết nối tới cơ sở dữ liệu
+    if (isset($_POST['TenDM']) && isset($_POST['MoTa'])) {
+
         $conn = connect_db();
-        if ($conn->connect_error) {
-            die ("Kết nối không thành công: " . $conn->connect_error);
-        }
         $TenDM = $_POST['TenDM'];
         $MoTa = $_POST['MoTa'];
         // Thực hiện truy vấn để thêm dữ liệu vào cơ sở dữ liệu
@@ -32,26 +28,26 @@ function addDanhMuc()
 
         $stmt->close();
 
-        // Đóng kết nối tới cơ sở dữ liệu
+
         $conn->close();
     }
 
 }
+
 function updateDM()
 {
     $conn = connect_db();
-    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset ($_POST["MaDM"])) {
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["MaDM"])) {
 
         // Kiểm tra kết nối
         if ($conn->connect_error) {
-            die ("Kết nối không thành công: " . $conn->connect_error);
+            die("Kết nối không thành công: " . $conn->connect_error);
         }
 
         $MaDM = $_POST['MaDM'];
         $TenDM = $_POST['TenDM'];
         $MoTa = $_POST['MoTa'];
 
-        // Cập nhật thông tin danh mục trong cơ sở dữ liệu
         $sql = "UPDATE danhmuc SET TenDM = '$TenDM', MoTa = '$MoTa' WHERE MaDM = '$MaDM'";
         if ($conn->query($sql) === true) {
             echo "<script>alert('Cập nhật thông tin sách thành công!');</script>";
@@ -61,7 +57,64 @@ function updateDM()
             echo 'Lỗi cập nhật thông tin danh mục:' . $conn->error;
         }
 
-        // Đóng kết nối tới cơ sở dữ liệu
+        $conn->close();
+
+    } else {
+        // echo 'Yêu cầu không hợp lệ';
+    }
+}
+// sach hiệu sồi
+function addDanhMucHieuSoi()
+{
+    if (isset($_POST['TenDM']) && isset($_POST['MoTa'])) {
+
+        $conn = connect_db();
+        $TenDM = $_POST['TenDM'];
+        $MoTa = $_POST['MoTa'];
+        // Thực hiện truy vấn để thêm dữ liệu vào cơ sở dữ liệu
+        $sql = "INSERT INTO danhmuc_sachsoi (TenDM, MoTa) VALUES (?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ss", $TenDM, $MoTa);
+
+        if ($stmt->execute()) {
+            echo "<div id='success-message' class='success-message'>Thêm danh mục thành công</div>";
+        } else {
+            echo "Lỗi: " . $sql . "<br>" . $conn->error;
+        }
+
+        $stmt->close();
+
+
+        $conn->close();
+    }
+
+}
+
+
+function updateDMSachHieuSoi()
+{
+    $conn = connect_db();
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["MaDM"])) {
+
+        // Kiểm tra kết nối
+        if ($conn->connect_error) {
+            die("Kết nối không thành công: " . $conn->connect_error);
+        }
+
+        $MaDM = $_POST['MaDM'];
+        $TenDM = $_POST['TenDM'];
+        $MoTa = $_POST['MoTa'];
+
+
+        $sql = "UPDATE danhmuc_sachsoi SET TenDM = '$TenDM', MoTa = '$MoTa' WHERE MaDM = '$MaDM'";
+        if ($conn->query($sql) === true) {
+            echo "<script>alert('Cập nhật thông tin danh mục thành công!');</script>";
+            echo "<script>window.location.href = 'index.php?act=listdmhieusoi';</script>";
+            exit();
+        } else {
+            echo 'Lỗi cập nhật thông tin danh mục:' . $conn->error;
+        }
+
         $conn->close();
 
     } else {
@@ -69,15 +122,30 @@ function updateDM()
     }
 }
 
+function deleteDMSachHieusoi()
+{
+    $conn = connect_db();
+
+    if (isset($_POST['MaDM'])) {
+        $maDMcanxoa = $_POST['MaDM'];
+        $sql_delete_book = "DELETE FROM danhmuc_sachsoi WHERE MaDM = $maDMcanxoa";
+        if (mysqli_query($conn, $sql_delete_book)) {
+            header('Location: index.php?act=listdmhieusoi');
+            exit;
+        } else {
+            echo "Lỗi khi xóa sách: " . mysqli_error($conn);
+        }
+
+        mysqli_close($conn);
+    }
+}
+
 // thêm sách
 function addSach()
 {
-    // Kiểm tra nếu có dữ liệu được gửi từ form
-    if (isset ($_POST['DanhMuc']) && isset ($_POST['TenSach']) && isset ($_POST['TacGia']) && isset ($_POST['MoTa']) && isset ($_POST['LoaiSach']) && isset ($_POST['NamXuatBan']) && isset ($_FILES['HinhAnhBia'])) {
-        // Kết nối cơ sở dữ liệu
+    if (isset($_POST['DanhMuc']) && isset($_POST['TenSach']) && isset($_POST['TacGia']) && isset($_POST['MoTa']) && isset($_POST['LoaiSach']) && isset($_POST['NamXuatBan']) && isset($_FILES['HinhAnhBia'])) {
         $conn = connect_db();
 
-        // Lấy dữ liệu từ form
         $DanhMuc = $_POST['DanhMuc'];
         $TenSach = $_POST['TenSach'];
         $TacGia = $_POST['TacGia'];
@@ -85,16 +153,12 @@ function addSach()
         $LoaiSach = $_POST['LoaiSach'];
         $NamXuatBan = $_POST['NamXuatBan'];
 
-        // Xử lý tệp hình ảnh
         $hinhanhpath = basename($_FILES['HinhAnhBia']['name']);
         $target_dir = "sach_dientu/uploads/";
         $target_file = $target_dir . $hinhanhpath;
 
         if (move_uploaded_file($_FILES["HinhAnhBia"]["tmp_name"], $target_file)) {
-            // Hình ảnh đã được tải lên thành công, tiếp tục thêm vào cơ sở dữ liệu
             $HinhAnhBia = $target_file;
-
-            // Thực hiện truy vấn để thêm dữ liệu vào cơ sở dữ liệu
             $sql = "INSERT INTO sach (danhMucID, TenSach, TacGia, MoTa, LoaiSach, NamXuatBan, HinhAnhBia) VALUES (?, ?, ?, ?, ?, ?, ?)";
             $stmt = $conn->prepare($sql);
             $stmt->bind_param("sssssss", $DanhMuc, $TenSach, $TacGia, $MoTa, $LoaiSach, $NamXuatBan, $HinhAnhBia);
@@ -110,9 +174,9 @@ function addSach()
             echo "Hình ảnh không được tải lên thành công";
         }
 
-        // Đóng kết nối tới cơ sở dữ liệu
         $conn->close();
     }
+
 }
 
 // Update sách điện tử
@@ -120,8 +184,7 @@ function addSach()
 function updateSach()
 {
     $conn = connect_db();
-
-    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset ($_POST['MaSach'])) {
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['MaSach'])) {
         $MaSach = $_POST['MaSach'];
         $DanhMuc = $_POST['DanhMuc'];
         $TenSach = $_POST['TenSach'];
@@ -129,31 +192,24 @@ function updateSach()
         $MoTa = $_POST['MoTa'];
         $LoaiSach = $_POST['LoaiSach'];
         $NamXuatBan = $_POST['NamXuatBan'];
-        // xử lý hình ảnh
 
         $targetDir = 'sach_dientu/uploads/';
         $uploadOk = 1;
         $imageFileType = strtolower(pathinfo($_FILES["HinhAnhBia"]["name"], PATHINFO_EXTENSION));
-        // tạo tên file duy nhất để tránh việc ghi đè các tệp tin tồn tại
         $targetFile = $targetDir . uniqid() . "." . $imageFileType;
-        // Kiểm tra hình ảnh có tồn tại không
         if ($_FILES['HinhAnhBia']['tmp_name']) {
             // Kiểm tra kích thước file 
             if ($_FILES['HinhAnhBia']['size'] > 500000) {
                 echo "Xin lỗi, hình ảnh của bạn quá lớn.";
                 $uploadOk = 0;
             }
-
-            // Cho phép các định dạng file nhất định
             $allowedFormats = array("jpg", "png", "jpeg", "gif");
             if (!in_array($imageFileType, $allowedFormats)) {
                 echo "Chỉ chấp nhận các định dạng JPG, JPEG, PNG and GIF.";
                 $uploadOk = 0;
             }
 
-            // Di chuyển  hình ảnh đến thư mục lưu trữ
             if ($uploadOk && move_uploaded_file($_FILES["HinhAnhBia"]["tmp_name"], $targetFile)) {
-                // Cập nhật thông tin danh mục trong cơ sở dữ liệu
                 $sql_update = "UPDATE sach SET danhMucID = '$DanhMuc', TenSach = '$TenSach', TacGia = '$TacGia', MoTa = '$MoTa', LoaiSach = '$LoaiSach', NamXuatBan = '$NamXuatBan', HinhAnhBia = '$targetFile' WHERE MaSach = '$MaSach'";
                 if ($conn->query($sql_update) === true) {
                     echo "<script>alert('Cập nhật thông tin sách thành công!');</script>";
@@ -173,7 +229,6 @@ function updateSach()
             } else {
                 echo 'Lỗi cập nhật thông tin Sách:' . $conn->error;
             }
-            // Đóng kết nối tới cơ sở dữ liệu
             $conn->close();
         }
     } else {
@@ -182,46 +237,17 @@ function updateSach()
 
 }
 
-function deleteDM()
-{
-    $conn = connect_db();
-
-    if (isset ($_POST['MaDM'])) {
-        $maDMcanxoa = $_POST['MaDM'];
-
-        // Thực hiện câu lệnh xóa sách từ bảng sach
-        $sql_delete_book = "DELETE FROM danhmuc WHERE MaDM = $maDMcanxoa";
-
-        if (mysqli_query($conn, $sql_delete_book)) {
-            // Chuyển hướng người dùng đến trang danh sách sách sau khi xóa thành công
-            header('Location: index.php?act=listdm');
-            exit;
-        } else {
-            echo "Lỗi khi xóa sách: " . mysqli_error($conn);
-        }
-
-        // Đóng kết nối với cơ sở dữ liệu
-        mysqli_close($conn);
-    }
-}
-
-
 function deleteSach()
 {
     $conn = connect_db();
-    // Lấy MaSach từ tham số GET
-
-    // Lấy MaSach từ tham số POST
-    if (isset ($_POST['MaSach'])) {
+    if (isset($_POST['MaSach'])) {
         $maSachcanxoa = $_POST['MaSach'];
 
         // Xóa tất cả các chương thuộc sách đó từ bảng chuong_sach
         $sql_delete_chapters = "DELETE FROM chuong_sach WHERE sach_id = $maSachcanxoa";
         if (mysqli_query($conn, $sql_delete_chapters)) {
-            // Tiến hành xóa sách từ bảng sach sau khi đã xóa hết các chương
             $sql_delete_book = "DELETE FROM sach WHERE MaSach = $maSachcanxoa";
             if (mysqli_query($conn, $sql_delete_book)) {
-                // Chuyển hướng người dùng đến trang danh sách sách sau khi xóa thành công
                 header('Location: index.php?act=listsach');
                 exit;
             } else {
@@ -231,7 +257,26 @@ function deleteSach()
             echo "Lỗi khi xóa chương: " . mysqli_error($conn);
         }
 
-        // Đóng kết nối với cơ sở dữ liệu
+        mysqli_close($conn);
+    }
+}
+
+
+
+function deleteDM()
+{
+    $conn = connect_db();
+
+    if (isset($_POST['MaDM'])) {
+        $maDMcanxoa = $_POST['MaDM'];
+        $sql_delete_book = "DELETE FROM danhmuc WHERE MaDM = $maDMcanxoa";
+        if (mysqli_query($conn, $sql_delete_book)) {
+            header('Location: index.php?act=listdm');
+            exit;
+        } else {
+            echo "Lỗi khi xóa sách: " . mysqli_error($conn);
+        }
+
         mysqli_close($conn);
     }
 }
@@ -240,8 +285,7 @@ function deleteSach()
 function addChuong()
 {
     $conn = connect_db();
-    // Kiểm tra xem các trường có được gửi từ form hay không
-    if (isset ($_POST['MaSach'], $_POST['TenChuong'], $_POST['NoiDung'])) {
+    if (isset($_POST['MaSach'], $_POST['TenChuong'], $_POST['NoiDung'])) {
         // Lấy dữ liệu từ form
         $MaSach = $_POST['MaSach'];
         $TenChuong = $_POST['TenChuong'];
@@ -255,8 +299,6 @@ function addChuong()
 
             $SoChuong = $row_count['SoChuong'] + 1;
             $sql = "INSERT INTO chuong_sach (TenChuong, NoiDung, sach_id, SoChuong) VALUES ('$TenChuong', '$NoiDung', '$MaSach', '$SoChuong')";
-
-            // thực thi truy vấn
             if (mysqli_query($conn, $sql)) {
                 echo "<script>alert('Thêm chương mới thành công!');</script>";
                 echo "<script>window.location.href = 'index.php?act=listchuong&MaSach=" . $MaSach . "';</script>";
@@ -266,12 +308,10 @@ function addChuong()
                 echo "Lỗi: " . $sql . "<br>" . mysqli_error($conn);
             }
         } else {
-            // Xử lý trường hợp không có kết quả trả về từ truy vấn
             echo "Không thể đếm số chương hiện có.";
         }
 
     } else {
-        // // Nếu các trường không được gửi từ form, hiển thị thông báo lỗi
         // echo "Vui lòng điền đầy đủ thông tin chương.";
         // exit();
     }
@@ -283,7 +323,7 @@ function addChuong()
 
 function deleteChuong()
 {
-    if (isset ($_POST['submit'])) {
+    if (isset($_POST['submit'])) {
         if ($_POST['submit'] == 'xoa') {
             $conn = connect_db();
 
@@ -298,7 +338,6 @@ function deleteChuong()
                 $row_count = mysqli_fetch_array($result_count);
                 $SoChuongMoi = $row_count['SoChuong'];
 
-                // cập nhật số chương mới trong quyến sách
                 $sql_update_sach = "UPDATE chuong_sach set SoChuong = $SoChuongMoi where sach_id = $MaSach";
                 if (mysqli_query($conn, $sql_update_sach)) {
                     echo "<div id='success-message' class='success-message'>Xóa chương thành công!</div>";
@@ -306,14 +345,13 @@ function deleteChuong()
                     echo "Lỗi khi cập nhật số chương!";
                 }
                 mysqli_close($conn);
-                // Sử dụng biến $MaSach trong câu lệnh header
                 header("Location: index.php?act=listchuong&MaSach=$MaSach");
                 exit;
             } else {
                 echo "Xóa không thành công!";
             }
         } else {
-            // Đảm bảo không có mã PHP nào được thực thi sau khi chuyển hướng
+
         }
     }
 }
@@ -321,27 +359,20 @@ function deleteChuong()
 function updateNoiDung()
 {
     $conn = connect_db();
-    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset ($_POST["MaChuong"])) {
-
-
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["MaChuong"])) {
         $MaSach = $_POST['MaSach'];
         $MaChuong = $_POST['MaChuong'];
         $TenChuong = $_POST['TenChuong'];
         $NoiDung = $_POST['NoiDung'];
-
-        // Cập nhật thông tin danh mục trong cơ sở dữ liệu
         $sql = "UPDATE chuong_sach SET TenChuong = '$TenChuong', NoiDung = '$NoiDung' WHERE MaChuong = '$MaChuong'";
         if ($conn->query($sql) === true) {
             echo "<script>alert('Cập Nhật nội dung thành công!');</script>";
-                echo "<script>window.location.href = 'index.php?act=listchuong&MaSach=" . $MaSach . "';</script>";
-
-
+            echo "<script>window.location.href = 'index.php?act=listchuong&MaSach=" . $MaSach . "';</script>";
 
         } else {
             echo 'Lỗi cập nhật thông nội dung chương:' . $conn->error;
         }
 
-        // Đóng kết nối tới cơ sở dữ liệu
         $conn->close();
 
     } else {
@@ -349,18 +380,16 @@ function updateNoiDung()
     }
 }
 
-function NhanXet(){
+function NhanXet()
+{
     $conn = connect_db();
-    if(isset($_POST['rate'], $_POST['NhanXet'], $_SESSION['MaKH'], $_POST['MaSach'])){
+    if (isset($_POST['rate'], $_POST['NhanXet'], $_SESSION['MaKH'], $_POST['MaSach'])) {
         $NhanXet = $_POST['NhanXet'];
         $DanhGia = $_POST['rate'];
         $nguoi_dung_id = $_SESSION['MaKH'];
         $sach_id = $_POST['MaSach'];
-        // Xây dựng câu lệnh SQL
         $sql = "INSERT INTO danhgia_nhanxet (nguoi_dung_id, sach_id, NhanXet, DanhGia) VALUES ('$nguoi_dung_id', '$sach_id', '$NhanXet', '$DanhGia')";
-        
-        // Thực thi câu lệnh SQL
-        if($conn->query($sql) === true){
+        if ($conn->query($sql) === true) {
             echo "<script>alert('Nhận xét thành công!');</script>";
             echo "<script>window.location.href = '../mota.php?MaSach=" . $sach_id . "';</script>";
 
@@ -368,9 +397,264 @@ function NhanXet(){
         } else {
             echo "Lỗi: " . $conn->error;
         }
-        
-        // Đóng kết nối
+
         $conn->close();
+    }
+}
+
+function audioFile()
+{
+    if (isset($_POST['submit']) && isset($_FILES['MyAudio'])) {
+        // Kết nối đến cơ sở dữ liệu
+        $conn = connect_db();
+
+        // Xử lý upload file âm thanh
+        $MyAudio = $_FILES['MyAudio']['name'];
+        $tmp_name = $_FILES['MyAudio']['tmp_name'];
+        $error = $_FILES['MyAudio']['error'];
+        $DanhMuc = $_POST['DanhMuc'];
+        $TenSach = $_POST['TenSach'];
+        $NamXuatBan = $_POST['NamXuatBan'];
+        $MoTa = $_POST['MoTa'];
+
+        if ($error === 0) {
+            $audio_ex = pathinfo($MyAudio, PATHINFO_EXTENSION);
+            $audio_ex_lc = strtolower($audio_ex);
+            $allowed_exs = array("aac", 'alac', 'aiff', 'dsd', 'flac', 'mp3', 'wav', 'wma');
+
+            if (in_array($audio_ex_lc, $allowed_exs)) {
+                $new_MyAudio = uniqid("audio-", true) . '.' . $audio_ex_lc;
+                $audio_upload_path = 'audio/uploads/' . $new_MyAudio;
+                move_uploaded_file($tmp_name, $audio_upload_path);
+
+                // Xử lý upload hình ảnh bìa
+                $hinhanhpath = basename($_FILES['HinhAnhBia']['name']);
+                $target_dir = "audio/uploads/";
+                $target_file = $target_dir . $hinhanhpath;
+
+                if (move_uploaded_file($_FILES["HinhAnhBia"]["tmp_name"], $target_file)) {
+                    $HinhAnhBia = $target_file;
+                    // Thực hiện truy vấn để thêm dữ liệu vào cơ sở dữ liệu
+                    $sql = "INSERT INTO sach_noi (danhMucID, TenSach, Sach_url, HinhAnhBia, MoTa, NamXuatBan) 
+                            VALUES('$DanhMuc', '$TenSach', '$audio_upload_path', '$HinhAnhBia', '$MoTa', '$NamXuatBan')";
+
+                    if (mysqli_query($conn, $sql)) {
+                        echo "<script>alert('Thêm Thành Công!');</script>";
+                        echo "<script>window.location.href = 'index.php?act=addaudiofile';</script>";
+                        exit(); // Dừng thực hiện kịp thời sau khi chuyển hướng
+                    } else {
+                        echo "Lỗi: " . $sql . "<br>" . mysqli_error($conn);
+                    }
+                } else {
+                    echo "Hình ảnh không được tải lên thành công";
+                }
+            } else {
+                echo "Loại file không hợp lệ";
+            }
+        } else {
+            echo "Có lỗi xảy ra khi upload file âm thanh";
+        }
+
+
+        $conn->close();
+    } else {
+        // echo "Lỗi: Form không được submit hoặc không có file âm thanh được gửi lên";
+    }
+}
+function deleteSachNoi()
+{
+    $conn = connect_db();
+
+    if (isset($_POST['MaSach'])) {
+        $maSachcanxoa = $_POST['MaSach'];
+        $sql_delete_book = "DELETE FROM sach_noi WHERE MaSach = $maSachcanxoa";
+        if (mysqli_query($conn, $sql_delete_book)) {
+            header('Location: index.php?act=listaudio');
+            exit;
+        } else {
+            echo "Lỗi khi xóa sách: " . mysqli_error($conn);
+        }
+        mysqli_close($conn);
+    }
+}
+
+function updateSachNoi()
+{
+    $conn = connect_db();
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['MaSach'])) {
+        $MaSach = $_POST['MaSach'];
+        $DanhMuc = $_POST['DanhMuc'];
+        $TenSach = $_POST['TenSach'];
+        $MoTa = $_POST['MoTa'];
+        $NamXuatBan = $_POST['NamXuatBan'];
+
+        // Kiểm tra xem người dùng đã tải lên hình ảnh mới hay không
+        if (isset($_FILES['HinhAnhBia']['tmp_name']) && !empty($_FILES['HinhAnhBia']['tmp_name'])) {
+            $uploadOk = 1;
+            $targetDir = 'audio/uploads/';
+            $imageFileType = strtolower(pathinfo($_FILES["HinhAnhBia"]["name"], PATHINFO_EXTENSION));
+            $targetFile = $targetDir . uniqid() . "." . $imageFileType;
+
+            // Kiểm tra kích thước file hình ảnh
+            if ($_FILES['HinhAnhBia']['size'] > 500000) {
+                echo "Xin lỗi, hình ảnh của bạn quá lớn.";
+                $uploadOk = 0;
+            }
+
+            $allowedFormats = array("jpg", "png", "jpeg", "gif");
+            if (!in_array($imageFileType, $allowedFormats)) {
+                echo "Chỉ chấp nhận các định dạng JPG, JPEG, PNG và GIF.";
+                $uploadOk = 0;
+            }
+
+            if ($uploadOk && move_uploaded_file($_FILES["HinhAnhBia"]["tmp_name"], $targetFile)) {
+                // Nếu hình ảnh mới được tải lên thành công, cập nhật thông tin sách
+                $sql_update = "UPDATE sach_noi SET danhMucID = '$DanhMuc', TenSach = '$TenSach', MoTa = '$MoTa', NamXuatBan = '$NamXuatBan', HinhAnhBia = '$targetFile' WHERE MaSach = '$MaSach'";
+                if ($conn->query($sql_update) === true) {
+                    echo "<script>alert('Cập nhật thông tin sách thành công!');</script>";
+                    echo "<script>window.location.href = 'index.php?act=listsachnoi';</script>";
+                } else {
+                    echo 'Lỗi Cập nhật thông tin Sách:' . $conn->error;
+                }
+            } else {
+                echo "Lỗi khi tải hình ảnh.";
+            }
+        } else {
+            // Nếu không có hình ảnh mới được tải lên, chỉ cập nhật các thông tin khác
+            $sql_update = "UPDATE sach_noi SET danhMucID = '$DanhMuc', TenSach = '$TenSach', MoTa = '$MoTa', NamXuatBan = '$NamXuatBan' WHERE MaSach = '$MaSach'";
+            if ($conn->query($sql_update) === true) {
+                echo "<script>alert('Cập nhật thông tin sách thành công!');</script>";
+                echo "<script>window.location.href = 'index.php?act=listaudio';</script>";
+            } else {
+                echo 'Lỗi cập nhật thông tin Sách:' . $conn->error;
+            }
+        }
+
+        $conn->close();
+    } else {
+        // echo 'Yêu cầu không hợp lệ';
+    }
+}
+
+
+function addSachHieuSoi()
+{
+    if (isset($_POST['DanhMuc']) && isset($_POST['TenSach']) && isset($_POST['TacGia']) && isset($_POST['MoTa']) && isset($_POST['Gia']) && isset($_POST['NamXuatBan']) && isset($_FILES['HinhAnhBia'])) {
+        $conn = connect_db();
+
+        $DanhMuc = $_POST['DanhMuc'];
+        $TenSach = $_POST['TenSach'];
+        $TacGia = $_POST['TacGia'];
+        $MoTa = $_POST['MoTa'];
+        $Gia = $_POST['Gia'];
+        $NamXuatBan = $_POST['NamXuatBan'];
+
+        $hinhanhpath = basename($_FILES['HinhAnhBia']['name']);
+        $target_dir = "sach_hieusoi/uploads/";
+        $target_file = $target_dir . $hinhanhpath;
+
+        if (move_uploaded_file($_FILES["HinhAnhBia"]["tmp_name"], $target_file)) {
+            $HinhAnhBia = $target_file;
+            $sql = "INSERT INTO sach_soi (danhMucID, TenSach, TacGia, MoTa, Gia, NamXuatBan, HinhAnhBia) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("sssssss", $DanhMuc, $TenSach, $TacGia, $MoTa, $Gia, $NamXuatBan, $HinhAnhBia);
+
+            if ($stmt->execute()) {
+                echo "<div id='success-message' class='success-message'>Thêm sách thành công</div>";
+            } else {
+                echo "Lỗi: " . $sql . "<br>" . $conn->error;
+            }
+
+            $stmt->close();
+        } else {
+            echo "Hình ảnh không được tải lên thành công";
+        }
+
+        $conn->close();
+    }
+
+}
+
+// Update sách điện tử
+
+function updateSachHieuSoi()
+{
+    $conn = connect_db();
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['MaSach'])) {
+        $MaSach = $_POST['MaSach'];
+        $DanhMuc = $_POST['DanhMuc'];
+        $TenSach = $_POST['TenSach'];
+        $TacGia = $_POST['TacGia'];
+        $MoTa = $_POST['MoTa'];
+        $Gia = $_POST['Gia'];
+        $NamXuatBan = $_POST['NamXuatBan'];
+
+        $targetDir = 'sach_dientu/uploads/';
+        $uploadOk = 1;
+        $imageFileType = strtolower(pathinfo($_FILES["HinhAnhBia"]["name"], PATHINFO_EXTENSION));
+        $targetFile = $targetDir . uniqid() . "." . $imageFileType;
+        if ($_FILES['HinhAnhBia']['tmp_name']) {
+            // Kiểm tra kích thước file 
+            if ($_FILES['HinhAnhBia']['size'] > 500000) {
+                echo "Xin lỗi, hình ảnh của bạn quá lớn.";
+                $uploadOk = 0;
+            }
+            $allowedFormats = array("jpg", "png", "jpeg", "gif");
+            if (!in_array($imageFileType, $allowedFormats)) {
+                echo "Chỉ chấp nhận các định dạng JPG, JPEG, PNG and GIF.";
+                $uploadOk = 0;
+            }
+
+            if ($uploadOk && move_uploaded_file($_FILES["HinhAnhBia"]["tmp_name"], $targetFile)) {
+                $sql_update = "UPDATE sach_soi SET danhMucID = '$DanhMuc', TenSach = '$TenSach', TacGia = '$TacGia', MoTa = '$MoTa', Gia = '$Gia', NamXuatBan = '$NamXuatBan', HinhAnhBia = '$targetFile' WHERE MaSach = '$MaSach'";
+                if ($conn->query($sql_update) === true) {
+                    echo "<script>alert('Cập nhật thông tin sách thành công!');</script>";
+                    echo "<script>window.location.href = 'index.php?act=listsachhieusoi';</script>";
+                } else {
+                    echo 'Lỗi Cập nhật thông tin Sách:' . $conn->error;
+                }
+            } else {
+                echo "Lỗi khi tải hình ảnh.";
+            }
+            
+        } else {
+            // nếu người dùng không tải lên hình ảnh mới, chỉ cập nhật thông tin khác
+            $sql_update = "UPDATE sach_soi SET danhMucID = '$DanhMuc', TenSach = '$TenSach', TacGia = '$TacGia', MoTa = '$MoTa', Gia = '$Gia', NamXuatBan = '$NamXuatBan' WHERE MaSach = '$MaSach'";
+            if ($conn->query($sql_update) === true) {
+                echo "<script>alert('Cập nhật thông tin sách thành công!');</script>";
+                echo "<script>window.location.href = 'index.php?act=listsachhieusoi';</script>";
+            } else {
+                echo 'Lỗi cập nhật thông tin Sách:' . $conn->error;
+            }
+            $conn->close();
+        }
+    } else {
+        // echo 'Yêu cầu không hợp lệ';
+    }
+
+}
+
+function deleteSachHieuSoi()
+{
+    $conn = connect_db();
+    if (isset($_POST['MaSach'])) {
+        $maSachcanxoa = $_POST['MaSach'];
+
+        // Xóa tất cả các chương thuộc sách đó từ bảng chuong_sach
+        $sql_delete_chapters = "DELETE FROM chuong_sach WHERE sach_id = $maSachcanxoa";
+        if (mysqli_query($conn, $sql_delete_chapters)) {
+            $sql_delete_book = "DELETE FROM sach_soi WHERE MaSach = $maSachcanxoa";
+            if (mysqli_query($conn, $sql_delete_book)) {
+                header('Location: index.php?act=listsachhieusoi');
+                exit;
+            } else {
+                echo "Lỗi khi xóa sách: " . mysqli_error($conn);
+            }
+        } else {
+            echo "Lỗi khi xóa chương: " . mysqli_error($conn);
+        }
+
+        mysqli_close($conn);
     }
 }
 

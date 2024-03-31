@@ -5,7 +5,7 @@ require_once '../db/db.php';
 if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['MaSach'])) {
     $MaSach = $conn->real_escape_string($_GET['MaSach']);
 
-    $sql_sach = "SELECT * FROM sach WHERE MaSach = '$MaSach'";
+    $sql_sach = "SELECT * FROM sach_soi WHERE MaSach = '$MaSach'";
     $result_sach = $conn->query($sql_sach);
 
     if ($result_sach && $result_sach->num_rows == 1) {
@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['MaSach'])) {
         $TenSach = $row_sach['TenSach'];
         $TacGia = $row_sach['TacGia'];
         $MoTa = $row_sach['MoTa'];
-        $LoaiSach = $row_sach['LoaiSach'];
+        $Gia = $row_sach['Gia'];
         $NamXuatBan = $row_sach['NamXuatBan'];
         $DanhMuc = $row_sach['danhMucID']; // Sửa ở đây để lấy danh mục
         $HinhAnhBia = $row_sach['HinhAnhBia'];
@@ -28,10 +28,10 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['MaSach'])) {
 
 ?>
 <div class="content-header">
-        <h2>Chỉnh sửa sách</h2>
+        <h2>Chỉnh sửa sách hiêu sồi</h2>
     </div>
 <div class="container-1">
-    <form action="index.php?act=updatesach" class="form1 form2" method="POST" enctype="multipart/form-data">
+    <form action="index.php?act=updatesachhieusoi" class="form1 form2" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="MaSach" value="<?php echo $MaSach; ?>">
         <div class="box-pp">
         <div class="form-group1">
@@ -39,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['MaSach'])) {
             <select name="DanhMuc" id="danhmuc" class="select-box">
                 <?php
                 // Truy vấn để lấy danh sách các danh mục
-                $sql = "SELECT MaDM, TenDM FROM danhmuc";
+                $sql = "SELECT MaDM, TenDM FROM danhmuc_sachsoi";
                 $result = mysqli_query($conn, $sql);
 
                 // Hiển thị các danh mục trong dropdown
@@ -63,11 +63,8 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['MaSach'])) {
             <input type="text" name="TacGia" id="TacGia" value="<?php echo $TacGia; ?>">
         </div>
         <div class="form-group1">
-            <label for="LoaiSach">Loại sách:</label>
-            <select name="LoaiSach" class="select-box">
-                <option class="option" value="MienPhi" <?php if ($LoaiSach == 'MienPhi') echo 'selected'; ?>>Sách miễn phí</option>
-                <option class="option" value="HoiVien" <?php if ($LoaiSach == 'HoiVien') echo 'selected'; ?>>Sách Hội Viên</option>
-            </select>
+            <label for="Gia">Giá:</label>
+            <input type="number" name="Gia" id="Gia" value="<?php echo $Gia; ?>">
         </div>
         </div>
         <div class="box-pp">

@@ -105,7 +105,7 @@ if (isset($_GET['MaSach'])) {
                                 </div>
                                 <div class="comment">
                                     <h3>Đọc giả nói gì về ❝
-                                        <?php echo $row['TenSach'] ?>❞
+                                        <?php echo $row['TenSach'] ?> ❞
                                     </h3>
                                     <h4>Đánh giá và nhận xét</h4>
                                     <hr>

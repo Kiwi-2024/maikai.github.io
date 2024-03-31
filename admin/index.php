@@ -85,9 +85,64 @@ include "header.php";
                     NhanXet();
                     break;
 
-                case 'audiofile':
+                case 'addaudiofile':
                     audioFile();
+                    include "audio/audios.php";
                     break;
+
+                case 'listaudio':
+                    include "audio/list_audio.php";
+                    break;
+
+                case 'deletesachnoi':
+                    deleteSachNoi();
+                    include "audio/form_delete.php";
+                    break;
+
+                case 'updatesachnoi':
+                    updateSachNoi();
+                    include "audio/form_update.php";
+                    break;
+
+                case 'adddmhieusoi':
+                    addDanhMucHieuSoi();
+                    include "dmhieusoi/adddmsachsoi.php";
+                    break;
+
+                case 'listdmhieusoi':
+                    include "dmhieusoi/list_dm.php";
+                    break;
+
+                case 'deletedmhieusoi':
+                    deleteDMSachHieusoi();
+                    include "dmhieusoi/form_delete.php";
+                    break;
+
+                case 'updatedmhieusoi':
+                    updateDMSachHieuSoi();
+                    include "dmhieusoi/form_update.php";
+                    break;
+                // sách hiệu sồi
+    
+                case 'addsachhieusoi':
+                    addSachHieuSoi();
+                    include "sach_hieusoi/add_sach.php";
+                    break;
+
+                case 'listsachhieusoi':
+                    include "sach_hieusoi/list_sach.php";
+                    break;
+
+                case 'updatesachhieusoi':
+                    updateSachHieuSoi();
+                    include "sach_hieusoi/form_update.php";
+                    break;
+
+                case 'deletesachhieusoi':
+                    deleteSachHieuSoi();
+                    include "sach_hieusoi/delete.php";
+                    break;
+
                 default:
                     break;
             }
