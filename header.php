@@ -9,6 +9,10 @@ require_once "connect_model/model.php";
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css">
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.1/css/all.min.css'>
+	<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Montserrat&amp;display=swap"rel="stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <link rel="stylesheet" href="css.css">
 
@@ -21,7 +25,7 @@ require_once "connect_model/model.php";
         <div class="maka1">
             <nav class="navigation">
                 <a href="sachdientu.php" class="pgp">Sách điện tử</a>
-                <a href=".container" id="About" class="pgp">Sách nói</a>
+                <a href="sachnoi.php" id="About" class="pgp">Sách nói</a>
                 <a href="sachhieusoi.php" class="pgp">Sách hiệu sồi</a>
                 <a href="#seemore" class="pgp">Sách tóm tắt</a>
                 <a href="#footer" class="pgp">Podcast</a>
@@ -44,10 +48,66 @@ require_once "connect_model/model.php";
             <div class="goicuoc"><a href="#"><button>Gói Cước</button></a></div>
             <div class="form-submit">
                 <?php
+                require_once "db/db.php";
+
+                $defaultImage = "img/Screenshot 2024-04-01 153617.png";
+
+                if (isset($_SESSION['MaKH'])) {
+                    $MaKH = $_SESSION['MaKH'];
+                }
+
                 if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
-                    echo $_SESSION['HoTen'];
-                    echo "<a href='taikhoan/logout.php'>Đăng xuất</a>";
-                    
+                    echo "<a href='khachhang.php?MaKH=$MaKH'>";
+
+                        // Truy vấn cơ sở dữ liệu để lấy đường dẫn đến hình ảnh của khách hàng
+                        $sql = "SELECT HinhAnh FROM khach_hang WHERE MaKH = '$MaKH'";
+                        $result = $conn->query($sql);
+
+                        if ($result && $result->num_rows > 0) {
+                            $row = $result->fetch_assoc();
+                            $hinhAnh = $row['HinhAnh'];
+                        } else {
+                            $hinhAnh = $defaultImage; // Sử dụng hình ảnh mặc định nếu không có hình ảnh trong cơ sở dữ liệu
+                        }
+
+                    // Hiển thị hình ảnh và nút dropdown
+                    echo "<img src='connect_model/$hinhAnh' alt='Hình ảnh khách hàng'>";
+                    echo "<button class='down'><ion-icon name='caret-down'></ion-icon></button>";
+                    echo "</a>";
+                    ?>
+                    <div class="admin-khachhang">
+                        <div class="taikhoan">
+                            <p>Ngoc Tam</p>
+                            <img src="connect_model/<?php echo $hinhAnh; ?>" alt="Hình ảnh khách hàng">
+
+                        </div>
+
+                        <button class="hoivien-aac"><a href="#">Trở thành hội viên</a></button>
+
+                        <div class="flex-p">
+
+                            <div class="icon-flex"><a href="khachhang.php?MaKH=<?php echo $MaKH ?>"><ion-icon
+                                        name="person-outline"></ion-icon>
+                                    <p>Quản lý tài khoản</p>
+                                </a></div>
+                            <div class="icon-flex"><a href="#"><ion-icon name="reorder-four-outline"></ion-icon>
+                                    <p>Tủ sách cá nhân</p>
+                                </a></div>
+                            <div class="icon-flex"><a href="lich_su.php"><ion-icon name="receipt-outline"></ion-icon>
+                                    <p>Lịch sử đọc sách</p>
+                                </a></div>
+                            <div class="icon-flex"><a href="#"><ion-icon name="call-outline"></ion-icon>
+                                    <p>Hỗ trợ khách hàng</p>
+                                </a></div>
+                            <div class="icon-flex"><a href="taikhoan/logout.php"><ion-icon
+                                        name="log-out-outline"></ion-icon>
+                                    <p>Đăng xuất</p>
+                                </a></div>
+                        </div>
+                    </div>
+
+                    <?php
+
                 } else {
                     echo "<a href='#'><button class='btnLogin-popup'>Đăng Nhập</button></a>";
                 }
@@ -58,7 +118,6 @@ require_once "connect_model/model.php";
             </div>
         </div>
         <!-- <button id="trangden"><ion-icon name="contrast"></ion-icon></button> -->
-
     </header>
 
     <div id="section1">

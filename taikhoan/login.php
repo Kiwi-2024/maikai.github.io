@@ -27,6 +27,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $_SESSION['HoTen'] = $row['HoTen'];
         $_SESSION['MaKH'] = $row['MaKH'];
         $_SESSION['VaiTro'] = $row['VaiTro'];
+        $_SESSION['HinhAnh'] = $row['HinhAnh'];
         
         // Nếu vai trò là admin, chuyển hướng tới trang admin
         if($_SESSION['VaiTro'] === 'admin') {

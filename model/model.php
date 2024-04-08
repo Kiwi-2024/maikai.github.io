@@ -291,18 +291,35 @@ function addChuong()
         $TenChuong = $_POST['TenChuong'];
         $NoiDung = $_POST['NoiDung'];
 
-        $sql_count = "SELECT COUNT(*) as SoChuong FROM chuong_sach WHERE sach_id = '$MaSach'";
+        // Kiểm tra bảng liên kết là sach hay sach_soi
+        $sql_check_sach = "SELECT * FROM sach WHERE MaSach = $MaSach";
+        $sql_check_sach_soi = "SELECT * FROM sach_soi WHERE MaSach = $MaSach";
+
+        $result_check_sach = mysqli_query($conn, $sql_check_sach);
+        $result_check_sach_soi = mysqli_query($conn, $sql_check_sach_soi);
+
+        if (mysqli_num_rows($result_check_sach) > 0) {
+            $table_name = 'chuong_sach';
+            $id_column = 'sach_id';
+        } elseif (mysqli_num_rows($result_check_sach_soi) > 0) {
+            $table_name = 'chuong_sach';
+            $id_column = 'sach_soi_id';
+        } else {
+            echo "Không tìm thấy sách hoặc sách_soi.";
+            exit();
+        }
+
+        // Đếm số chương hiện có
+        $sql_count = "SELECT COUNT(*) as SoChuong FROM $table_name WHERE $id_column = '$MaSach'";
         $result_count = mysqli_query($conn, $sql_count);
         $row_count = mysqli_fetch_assoc($result_count);
 
         if ($row_count) {
-
             $SoChuong = $row_count['SoChuong'] + 1;
-            $sql = "INSERT INTO chuong_sach (TenChuong, NoiDung, sach_id, SoChuong) VALUES ('$TenChuong', '$NoiDung', '$MaSach', '$SoChuong')";
+            $sql = "INSERT INTO $table_name (TenChuong, NoiDung, $id_column, SoChuong) VALUES ('$TenChuong', '$NoiDung', '$MaSach', '$SoChuong')";
             if (mysqli_query($conn, $sql)) {
                 echo "<script>alert('Thêm chương mới thành công!');</script>";
                 echo "<script>window.location.href = 'index.php?act=listchuong&MaSach=" . $MaSach . "';</script>";
-
                 exit();
             } else {
                 echo "Lỗi: " . $sql . "<br>" . mysqli_error($conn);
@@ -310,7 +327,6 @@ function addChuong()
         } else {
             echo "Không thể đếm số chương hiện có.";
         }
-
     } else {
         // echo "Vui lòng điền đầy đủ thông tin chương.";
         // exit();
@@ -318,7 +334,6 @@ function addChuong()
 
     // Đóng kết nối
     mysqli_close($conn);
-
 }
 
 function deleteChuong()
@@ -380,27 +395,44 @@ function updateNoiDung()
     }
 }
 
-function NhanXet()
-{
+function NhanXet() {
     $conn = connect_db();
     if (isset($_POST['rate'], $_POST['NhanXet'], $_SESSION['MaKH'], $_POST['MaSach'])) {
         $NhanXet = $_POST['NhanXet'];
         $DanhGia = $_POST['rate'];
         $nguoi_dung_id = $_SESSION['MaKH'];
         $sach_id = $_POST['MaSach'];
-        $sql = "INSERT INTO danhgia_nhanxet (nguoi_dung_id, sach_id, NhanXet, DanhGia) VALUES ('$nguoi_dung_id', '$sach_id', '$NhanXet', '$DanhGia')";
-        if ($conn->query($sql) === true) {
-            echo "<script>alert('Nhận xét thành công!');</script>";
-            echo "<script>window.location.href = '../mota.php?MaSach=" . $sach_id . "';</script>";
-
-            exit;
+        $sql = ""; // Khởi tạo biến $sql
+        // Kiểm tra xem liệu sách này là sách thường hay sách soi hay sách nối
+        if (isset($_POST['sach_soi_id'])) {
+            $sach_soi_id = $_POST['sach_soi_id'];
+            $sql = "INSERT INTO danhgia_nhanxet (nguoi_dung_id, sach_soi_id, NhanXet, DanhGia) VALUES ('$nguoi_dung_id', '$sach_soi_id', '$NhanXet', '$DanhGia')";
+        } elseif (isset($_POST['sach_noi_id'])) {
+            // Sách nối
+            $sach_noi_id = $_POST['sach_noi_id'];
+            $sql = "INSERT INTO danhgia_nhanxet (nguoi_dung_id, sach_noi_id, NhanXet, DanhGia) VALUES ('$nguoi_dung_id', '$sach_noi_id', '$NhanXet', '$DanhGia')";
         } else {
-            echo "Lỗi: " . $conn->error;
+            // Sách thường
+            $sach_id = $_POST['MaSach'];
+            $sql = "INSERT INTO danhgia_nhanxet (nguoi_dung_id, sach_id, NhanXet, DanhGia) VALUES ('$nguoi_dung_id', '$sach_id', '$NhanXet', '$DanhGia')";
+        }
+
+        if (!empty($sql)) { // Kiểm tra xem biến $sql có giá trị không trống
+            if ($conn->query($sql) === true) {
+                echo "<script>alert('Nhận xét thành công!');</script>";
+                echo "<script>window.location.href = '../mota.php?MaSach=" . $sach_id . "';</script>";
+                exit;
+            } else {
+                echo "Lỗi: " . $conn->error;
+            }
+        } else {
+            echo "Lỗi: Biến \$sql không được gán giá trị.";
         }
 
         $conn->close();
     }
 }
+
 
 function audioFile()
 {

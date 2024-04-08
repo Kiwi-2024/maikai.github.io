@@ -4,6 +4,7 @@ session_start();
 unset($_SESSION['loggedin']);
 unset($_SESSION['Email']);
 unset($_SESSION['VaiTro']);
+unset($_SESSION['MaKH']);
 
 // Sau đó chuyển hướng người dùng đến trang đăng nhập
 header("Location: ../index.php");

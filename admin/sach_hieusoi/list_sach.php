@@ -11,7 +11,7 @@ if (isset($_GET['btnsearch'])) {
     if ($keyword !== '') {
         $querysearch = "SELECT sach_soi.*, COUNT(chuong_sach.MaChuong) AS SoChuong
                         FROM sach_soi
-                        LEFT JOIN chuong_sach ON sach_soi.MaSach = chuong_sach.sach_id
+                        LEFT JOIN chuong_sach ON sach_soi.MaSach = chuong_sach.sach_soi_id
                         WHERE TenSach LIKE '%$keyword%'
                         GROUP BY sach_soi.MaSach
                         ORDER BY MaSach DESC";
@@ -19,18 +19,19 @@ if (isset($_GET['btnsearch'])) {
     } else {
         $results = mysqli_query($conn, 'SELECT sach_soi.*, COUNT(chuong_sach.MaChuong) AS SoChuong
                                         FROM sach_soi
-                                        LEFT JOIN chuong_sach ON sach_soi.MaSach = chuong_sach.sach_id
+                                        LEFT JOIN chuong_sach ON sach_soi.MaSach = chuong_sach.sach_soi_id
                                         GROUP BY sach_soi.MaSach
                                         ORDER BY MaSach DESC');
     }
 } else {
     $results = mysqli_query($conn, 'SELECT sach_soi.*, COUNT(chuong_sach.MaChuong) AS SoChuong
                                     FROM sach_soi
-                                    LEFT JOIN chuong_sach ON sach_soi.MaSach = chuong_sach.sach_id
+                                    LEFT JOIN chuong_sach ON sach_soi.MaSach = chuong_sach.sach_soi_id
                                     GROUP BY sach_soi.MaSach
                                     ORDER BY MaSach DESC');
 }
 ?>
+
 <div class="content-header">
     <h2>Quản lý sách hiệu sồi</h2>
 </div>
@@ -75,7 +76,7 @@ if (isset($_GET['btnsearch'])) {
                         <a href="index.php?act=deletesachhieusoi&MaSach=<?php echo $row['MaSach']; ?>" class="link">Delete</a>
                     </td>
                     <td>
-                        <a href="index.php?act=listchuong&MaSach=<?php echo $row['MaSach']; ?>" class="link">List Chương Sách</a>
+                    <a href="index.php?act=listchuong&MaSach=<?php echo $row['MaSach']; ?>" class="link">List Chương Sách</a>
                     </td>
                 </tr>
             <?php } ?>
