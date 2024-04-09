@@ -28,14 +28,14 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['MaKH'])) {
 <div class="quanly">
     <div class="quanly_tk">
         <div class="box-left">
-            <h3>Ngọc Tâm</h3>
+            <h3><?php echo $HoTen; ?></h3>
             <img src="connect_model/<?php echo $hinhAnh; ?>" alt="Hình ảnh khách hàng">
         </div>
         <div class="flex-quanly">
             <div class="icon-flex1 button_color"><a href="#"><ion-icon name="person-outline"></ion-icon>
                     <p>Quản lý tài khoản</p>
                 </a></div>
-            <div class="icon-flex1"><a href="#"><ion-icon name="reorder-four-outline"></ion-icon>
+            <div class="icon-flex1"><a href="tusach.php"><ion-icon name="reorder-four-outline"></ion-icon>
                     <p>Tủ sách cá nhân</p>
                 </a></div>
             <div class="icon-flex1"><a href="lich_su.php"><ion-icon name="receipt-outline"></ion-icon>

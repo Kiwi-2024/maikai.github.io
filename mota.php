@@ -135,15 +135,43 @@ if (isset($_GET['MaSach'])) {
 
                                     if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
                                         $read_book_url = "docsach.php?MaSach={$row['MaSach']}&MaChuong=$MaChuong&MaKH=$MaKH";
+
                                     } else {
                                         $read_book_url = "docsach.php?MaSach={$row['MaSach']}&MaChuong=$MaChuong";
                                     }
                                     ?>
+                                    <div class="button-ccv">
+                                        <a href="<?php echo $read_book_url; ?>" class="link">
+                                            <button class="docsach">Đọc sách</button>
+                                        </a>
+                                        <?php
+                                        if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
 
-                                    <a href="<?php echo $read_book_url; ?>" class="link">
-                                        <button class="docsach">Đọc sách</button>
-                                    </a>
+                                            $query = "SELECT * FROM yeuthich WHERE sach_id = '$MaSach' AND nguoi_dung_id = '$MaKH'";
+                                            $result = mysqli_query($conn, $query);
+                                            $count = mysqli_num_rows($result);
+                                            if ($count > 0) {
+                                                ?>
+                                                <form action="connect_model/yeuthich.php" method="post">
+                                                    <input type="hidden" name="MaSach" value="<?php echo $MaSach; ?>">
+                                                    <input type="hidden" name="MaKH" value="<?php echo $MaKH; ?>">
+                                                    <button type="submit" style="color: red" ; class="docsach yeuthich"><ion-icon
+                                                            name="heart"></ion-icon></button>
+                                                </form>
+                                                <?php
+                                            } else {
+                                                ?>
+                                                <form action="connect_model/yeuthich.php" method="post">
+                                                    <input type="hidden" name="MaSach" value="<?php echo $MaSach; ?>">
+                                                    <input type="hidden" name="MaKH" value="<?php echo $MaKH; ?>">
+                                                    <button type="submit" class="docsach yeuthich"><ion-icon name="heart-outline"></ion-icon></button>
+                                                </form>
+                                                <?php
+                                            }
+                                        }
+                                        ?>
 
+                                    </div>
                                 </div>
                                 <div class="mota-sach">
                                     <p>
@@ -358,9 +386,38 @@ if (isset($_GET['MaSach'])) {
                                     }
                                     ?>
 
-                                    <a href="<?php echo $read_book_url; ?>" class="link">
-                                        <button class="docsach">Đọc sách</button>
-                                    </a>
+                                    <div class="button-ccv">
+                                        <a href="<?php echo $read_book_url; ?>" class="link">
+                                            <button class="docsach">Đọc sách</button>
+                                        </a>
+                                        <?php
+                                        if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
+
+                                            $query = "SELECT * FROM yeuthich WHERE sach_soi_id = '$MaSach' AND nguoi_dung_id = '$MaKH'";
+                                            $result = mysqli_query($conn, $query);
+                                            $count = mysqli_num_rows($result);
+                                            if ($count > 0) {
+                                                ?>
+                                                <form action="connect_model/yeuthich.php" method="post">
+                                                    <input type="hidden" name="sach_soi_id" value="<?php echo $MaSach; ?>">
+                                                    <input type="hidden" name="MaKH" value="<?php echo $MaKH; ?>">
+                                                    <button type="submit" style="color: red" ; class="docsach yeuthich"><ion-icon
+                                                            name="heart"></ion-icon></button>
+                                                </form>
+                                                <?php
+                                            } else {
+                                                ?>
+                                                <form action="connect_model/yeuthich.php" method="post">
+                                                    <input type="hidden" name="sach_soi_id" value="<?php echo $MaSach; ?>">
+                                                    <input type="hidden" name="MaKH" value="<?php echo $MaKH; ?>">
+                                                    <button type="submit" class="docsach yeuthich"><ion-icon name="heart-outline"></ion-icon></button>
+                                                </form>
+                                                <?php
+                                            }
+                                        }
+                                        ?>
+
+                                    </div>
 
                                 </div>
                                 <div class="mota-sach">
@@ -556,13 +613,40 @@ if (isset($_GET['MaSach'])) {
                                     }
 
                                     ?>
+                                    <div class="button-ccv">
+                                        <form id="audioForm" method="post" action="luu_audio.php">
+                                            <input type="hidden" name="MaSach" value="<?php echo $row['MaSach']; ?>">
+                                            <button type="button" class="docsach"
+                                                onclick="saveAudioToSession('<?php echo $row['Sach_url']; ?>')">Nghe audio</button>
+                                        </form>
+                                        <?php
+                                        if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
 
-                                    <form id="audioForm" method="post" action="luu_audio.php">
-                                        <input type="hidden" name="MaSach" value="<?php echo $row['MaSach']; ?>">
-                                        <button type="button" class="docsach"
-                                            onclick="saveAudioToSession('<?php echo $row['Sach_url']; ?>')">Nghe audio</button>
-                                    </form>
+                                            $query = "SELECT * FROM yeuthich WHERE sach_noi_id = '$MaSach' AND nguoi_dung_id = '$MaKH'";
+                                            $result = mysqli_query($conn, $query);
+                                            $count = mysqli_num_rows($result);
+                                            if ($count > 0) {
+                                                ?>
+                                                <form action="connect_model/yeuthich.php" method="post">
+                                                    <input type="hidden" name="sach_noi_id" value="<?php echo $MaSach; ?>">
+                                                    <input type="hidden" name="MaKH" value="<?php echo $MaKH; ?>">
+                                                    <button type="submit" style="color: red" ; class="docsach yeuthich"><ion-icon
+                                                            name="heart"></ion-icon></button>
+                                                </form>
+                                                <?php
+                                            } else {
+                                                ?>
+                                                <form action="connect_model/yeuthich.php" method="post">
+                                                    <input type="hidden" name="sach_noi_id" value="<?php echo $MaSach; ?>">
+                                                    <input type="hidden" name="MaKH" value="<?php echo $MaKH; ?>">
+                                                    <button type="submit" class="docsach yeuthich"><ion-icon name="heart-outline"></ion-icon></button>
+                                                </form>
+                                                <?php
+                                            }
+                                        }
+                                        ?>
 
+                                    </div>
                                     <?php
 
                                     ?>

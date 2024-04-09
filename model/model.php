@@ -221,7 +221,6 @@ function updateSach()
                 echo "Lỗi khi tải hình ảnh.";
             }
         } else {
-            // nếu người dùng không tải lên hình ảnh mới, chỉ cập nhật thông tin khác
             $sql_update = "UPDATE sach SET danhMucID = '$DanhMuc', TenSach = '$TenSach', TacGia = '$TacGia', MoTa = '$MoTa', LoaiSach = '$LoaiSach', NamXuatBan = '$NamXuatBan' WHERE MaSach = '$MaSach'";
             if ($conn->query($sql_update) === true) {
                 echo "<script>alert('Cập nhật thông tin sách thành công!');</script>";
@@ -338,36 +337,39 @@ function addChuong()
 
 function deleteChuong()
 {
-    if (isset($_POST['submit'])) {
-        if ($_POST['submit'] == 'xoa') {
-            $conn = connect_db();
+    if (isset($_POST['submit']) && $_POST['submit'] == 'xoa') {
+        $conn = connect_db();
+        $maChuongcanxoa = $_POST['MaChuong'];
+        $MaSach = $_POST['MaSach']; // Giả sử đã lấy giá trị MaSach từ URL
 
-            $maChuongcanxoa = $_POST['MaChuong'];
-            // Đảm bảo biến $MaSach đã được gán giá trị từ URL
-            $MaSach = $_POST['MaSach']; // Giả sử đã lấy giá trị MaSach từ URL
-
+        // Xóa các hàng trong bảng lich_su trước
+        $sql_delete_lich_su = "DELETE FROM lich_su WHERE chuong_id = $maChuongcanxoa";
+        if (mysqli_query($conn, $sql_delete_lich_su)) {
+            // Tiếp tục xóa chương nếu xóa lich_su thành công
             if (mysqli_query($conn, "DELETE FROM chuong_sach WHERE MaChuong = $maChuongcanxoa")) {
-
+                // Đếm số chương mới
                 $sql_count = "SELECT COUNT(*) as SoChuong FROM chuong_sach WHERE sach_id = $MaSach";
                 $result_count = mysqli_query($conn, $sql_count);
                 $row_count = mysqli_fetch_array($result_count);
                 $SoChuongMoi = $row_count['SoChuong'];
 
+                // Cập nhật số chương mới
                 $sql_update_sach = "UPDATE chuong_sach set SoChuong = $SoChuongMoi where sach_id = $MaSach";
                 if (mysqli_query($conn, $sql_update_sach)) {
                     echo "<div id='success-message' class='success-message'>Xóa chương thành công!</div>";
                 } else {
                     echo "Lỗi khi cập nhật số chương!";
                 }
-                mysqli_close($conn);
-                header("Location: index.php?act=listchuong&MaSach=$MaSach");
-                exit;
             } else {
-                echo "Xóa không thành công!";
+                echo "Xóa chương không thành công!";
             }
         } else {
-
+            echo "Xóa lịch sử đọc sách không thành công!";
         }
+
+        mysqli_close($conn);
+        header("Location: index.php?act=listchuong&MaSach=$MaSach");
+        exit;
     }
 }
 
@@ -417,7 +419,7 @@ function NhanXet() {
             $sql = "INSERT INTO danhgia_nhanxet (nguoi_dung_id, sach_id, NhanXet, DanhGia) VALUES ('$nguoi_dung_id', '$sach_id', '$NhanXet', '$DanhGia')";
         }
 
-        if (!empty($sql)) { // Kiểm tra xem biến $sql có giá trị không trống
+        if (!empty($sql)) {
             if ($conn->query($sql) === true) {
                 echo "<script>alert('Nhận xét thành công!');</script>";
                 echo "<script>window.location.href = '../mota.php?MaSach=" . $sach_id . "';</script>";

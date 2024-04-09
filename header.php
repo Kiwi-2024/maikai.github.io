@@ -11,8 +11,8 @@ require_once "connect_model/model.php";
 </head>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css">
 <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.1/css/all.min.css'>
-	<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Montserrat&amp;display=swap"rel="stylesheet'>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Montserrat&amp;display=swap"rel="stylesheet'>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <link rel="stylesheet" href="css.css">
 
@@ -58,26 +58,27 @@ require_once "connect_model/model.php";
 
                 if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
                     echo "<a href='khachhang.php?MaKH=$MaKH'>";
+                    $sql = "SELECT HinhAnh, HoTen FROM khach_hang WHERE MaKH = '$MaKH'";
+                    $result = $conn->query($sql);
 
-                        // Truy vấn cơ sở dữ liệu để lấy đường dẫn đến hình ảnh của khách hàng
-                        $sql = "SELECT HinhAnh FROM khach_hang WHERE MaKH = '$MaKH'";
-                        $result = $conn->query($sql);
+                    if ($result && $result->num_rows > 0) {
+                        $row = $result->fetch_assoc();
+                        $hinhAnh = $row['HinhAnh'];
+                        $hoTen = $row['HoTen']; 
+                    } else {
+                        $hinhAnh = $defaultImage; 
+                    }
 
-                        if ($result && $result->num_rows > 0) {
-                            $row = $result->fetch_assoc();
-                            $hinhAnh = $row['HinhAnh'];
-                        } else {
-                            $hinhAnh = $defaultImage; // Sử dụng hình ảnh mặc định nếu không có hình ảnh trong cơ sở dữ liệu
-                        }
 
-                    // Hiển thị hình ảnh và nút dropdown
                     echo "<img src='connect_model/$hinhAnh' alt='Hình ảnh khách hàng'>";
                     echo "<button class='down'><ion-icon name='caret-down'></ion-icon></button>";
                     echo "</a>";
                     ?>
                     <div class="admin-khachhang">
                         <div class="taikhoan">
-                            <p>Ngoc Tam</p>
+                            <p>
+                                <?php echo $hoTen; ?>
+                            </p>
                             <img src="connect_model/<?php echo $hinhAnh; ?>" alt="Hình ảnh khách hàng">
 
                         </div>
@@ -90,7 +91,7 @@ require_once "connect_model/model.php";
                                         name="person-outline"></ion-icon>
                                     <p>Quản lý tài khoản</p>
                                 </a></div>
-                            <div class="icon-flex"><a href="#"><ion-icon name="reorder-four-outline"></ion-icon>
+                            <div class="icon-flex"><a href="tusach.php"><ion-icon name="reorder-four-outline"></ion-icon>
                                     <p>Tủ sách cá nhân</p>
                                 </a></div>
                             <div class="icon-flex"><a href="lich_su.php"><ion-icon name="receipt-outline"></ion-icon>
