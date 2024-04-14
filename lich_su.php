@@ -8,7 +8,7 @@ require_once "db/db.php";
 <div class="quanly">
     <div class="quanly_tk">
         <div class="box-left">
-            <h3>Ngọc Tâm</h3>
+        <h3><?php echo $hoTen; ?></h3>
             <img src="connect_model/<?php echo $hinhAnh; ?>" alt="Hình ảnh khách hàng">
         </div>
         <div class="flex-quanly">

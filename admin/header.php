@@ -22,7 +22,6 @@
                 <li><a href="index.php?act=listaudio">Sách nói</a></li>
                 <li><a href="index.php?act=listdmhieusoi">Danh mục sách hiệu sồi</a></li>
                 <li><a href="index.php?act=listsachhieusoi">Sách hiệu sồi</a></li>
-                <li><a href="index.php?act=addbl">Podcast</a></li>
                 <li><a href="index.php?act=listtaikhoan">Khách hàng</a></li>
                 <li><a href="index.php?act=listnhanxet">Bình luận</a></li>
             </ul>

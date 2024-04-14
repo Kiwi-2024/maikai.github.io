@@ -22,7 +22,6 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['MaKH'])) {
 } else {
     
 }
-
 ?>
 
 <div class="quanly">

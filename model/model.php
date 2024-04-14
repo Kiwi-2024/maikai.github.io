@@ -15,6 +15,10 @@ function addDanhMuc()
         $conn = connect_db();
         $TenDM = $_POST['TenDM'];
         $MoTa = $_POST['MoTa'];
+        if (empty($TenDM) || empty($MoTa)) {
+            echo "<div id='success-message' class='success-message' style='color: red;'>Vui lòng nhập đầy đủ thông tin</div>";
+            return;
+        }
         // Thực hiện truy vấn để thêm dữ liệu vào cơ sở dữ liệu
         $sql = "INSERT INTO danhmuc (TenDM, MoTa) VALUES (?, ?)";
         $stmt = $conn->prepare($sql);
@@ -47,7 +51,10 @@ function updateDM()
         $MaDM = $_POST['MaDM'];
         $TenDM = $_POST['TenDM'];
         $MoTa = $_POST['MoTa'];
-
+        if (empty($TenDM) || empty($MoTa)) {
+            echo "<div id='success-message' class='success-message' style='color: red;'>Vui lòng nhập đầy đủ thông tin</div>";
+            return;
+        }
         $sql = "UPDATE danhmuc SET TenDM = '$TenDM', MoTa = '$MoTa' WHERE MaDM = '$MaDM'";
         if ($conn->query($sql) === true) {
             echo "<script>alert('Cập nhật thông tin sách thành công!');</script>";
@@ -71,6 +78,10 @@ function addDanhMucHieuSoi()
         $conn = connect_db();
         $TenDM = $_POST['TenDM'];
         $MoTa = $_POST['MoTa'];
+        if (empty($TenDM) || empty($MoTa)) {
+            echo "<div id='success-message' class='success-message' style='color: red;'>Vui lòng nhập đầy đủ thông tin</div>";
+            return;
+        }
         // Thực hiện truy vấn để thêm dữ liệu vào cơ sở dữ liệu
         $sql = "INSERT INTO danhmuc_sachsoi (TenDM, MoTa) VALUES (?, ?)";
         $stmt = $conn->prepare($sql);
@@ -104,7 +115,10 @@ function updateDMSachHieuSoi()
         $MaDM = $_POST['MaDM'];
         $TenDM = $_POST['TenDM'];
         $MoTa = $_POST['MoTa'];
-
+        if (empty($TenDM) || empty($MoTa)) {
+            echo "<div id='success-message' class='success-message' style='color: red;'>Vui lòng nhập đầy đủ thông tin</div>";
+            return;
+        }
 
         $sql = "UPDATE danhmuc_sachsoi SET TenDM = '$TenDM', MoTa = '$MoTa' WHERE MaDM = '$MaDM'";
         if ($conn->query($sql) === true) {
@@ -152,7 +166,10 @@ function addSach()
         $MoTa = $_POST['MoTa'];
         $LoaiSach = $_POST['LoaiSach'];
         $NamXuatBan = $_POST['NamXuatBan'];
-
+        if (empty($TenSach) || empty($TacGia) || empty($MoTa) || empty($NamXuatBan)) {
+            echo "<div id='success-message' class='success-message' style='color: red;'>Vui lòng nhập đầy đủ thông tin</div>";
+            return;
+        }
         $hinhanhpath = basename($_FILES['HinhAnhBia']['name']);
         $target_dir = "sach_dientu/uploads/";
         $target_file = $target_dir . $hinhanhpath;
@@ -192,7 +209,10 @@ function updateSach()
         $MoTa = $_POST['MoTa'];
         $LoaiSach = $_POST['LoaiSach'];
         $NamXuatBan = $_POST['NamXuatBan'];
-
+        if (empty($TenSach) || empty($TacGia) || empty($MoTa) || empty($NamXuatBan)) {
+            echo "<div id='success-message' class='success-message' style='color: red;'>Vui lòng nhập đầy đủ thông tin</div>";
+            return;
+        }
         $targetDir = 'sach_dientu/uploads/';
         $uploadOk = 1;
         $imageFileType = strtolower(pathinfo($_FILES["HinhAnhBia"]["name"], PATHINFO_EXTENSION));
@@ -289,7 +309,10 @@ function addChuong()
         $MaSach = $_POST['MaSach'];
         $TenChuong = $_POST['TenChuong'];
         $NoiDung = $_POST['NoiDung'];
-
+        if (empty($TenChuong) || empty($NoiDung)) {
+            echo "<div id='success-message' class='success-message' style='color: red;'>Vui lòng nhập đầy đủ thông tin</div>";
+            return;
+        }
         // Kiểm tra bảng liên kết là sach hay sach_soi
         $sql_check_sach = "SELECT * FROM sach WHERE MaSach = $MaSach";
         $sql_check_sach_soi = "SELECT * FROM sach_soi WHERE MaSach = $MaSach";
@@ -381,6 +404,10 @@ function updateNoiDung()
         $MaChuong = $_POST['MaChuong'];
         $TenChuong = $_POST['TenChuong'];
         $NoiDung = $_POST['NoiDung'];
+        if (empty($TenChuong) || empty($NoiDung)) {
+            echo "<div id='success-message' class='success-message' style='color: red;'>Vui lòng nhập đầy đủ thông tin</div>";
+            return;
+        }
         $sql = "UPDATE chuong_sach SET TenChuong = '$TenChuong', NoiDung = '$NoiDung' WHERE MaChuong = '$MaChuong'";
         if ($conn->query($sql) === true) {
             echo "<script>alert('Cập Nhật nội dung thành công!');</script>";
@@ -397,15 +424,19 @@ function updateNoiDung()
     }
 }
 
-function NhanXet() {
+function NhanXet()
+{
     $conn = connect_db();
     if (isset($_POST['rate'], $_POST['NhanXet'], $_SESSION['MaKH'], $_POST['MaSach'])) {
         $NhanXet = $_POST['NhanXet'];
         $DanhGia = $_POST['rate'];
         $nguoi_dung_id = $_SESSION['MaKH'];
         $sach_id = $_POST['MaSach'];
-        $sql = ""; // Khởi tạo biến $sql
-        // Kiểm tra xem liệu sách này là sách thường hay sách soi hay sách nối
+        if (empty($NhanXet) || empty($DanhGia)) {
+            echo "<div id='success-message' class='success-message' style='color: red;'>Vui lòng nhập đầy đủ thông tin</div>";
+            return;
+        }
+        $sql = "";
         if (isset($_POST['sach_soi_id'])) {
             $sach_soi_id = $_POST['sach_soi_id'];
             $sql = "INSERT INTO danhgia_nhanxet (nguoi_dung_id, sach_soi_id, NhanXet, DanhGia) VALUES ('$nguoi_dung_id', '$sach_soi_id', '$NhanXet', '$DanhGia')";
@@ -450,7 +481,10 @@ function audioFile()
         $TenSach = $_POST['TenSach'];
         $NamXuatBan = $_POST['NamXuatBan'];
         $MoTa = $_POST['MoTa'];
-
+        if (empty($TenSach) || empty($NamXuatBan) || empty($MoTa) || empty($MyAudio)) {
+            echo "<div id='success-message' class='success-message' style='color: red;'>Vui lòng nhập đầy đủ thông tin</div>";
+            return;
+        }
         if ($error === 0) {
             $audio_ex = pathinfo($MyAudio, PATHINFO_EXTENSION);
             $audio_ex_lc = strtolower($audio_ex);
@@ -475,7 +509,7 @@ function audioFile()
                     if (mysqli_query($conn, $sql)) {
                         echo "<script>alert('Thêm Thành Công!');</script>";
                         echo "<script>window.location.href = 'index.php?act=addaudiofile';</script>";
-                        exit(); // Dừng thực hiện kịp thời sau khi chuyển hướng
+                        exit();
                     } else {
                         echo "Lỗi: " . $sql . "<br>" . mysqli_error($conn);
                     }
@@ -521,7 +555,10 @@ function updateSachNoi()
         $TenSach = $_POST['TenSach'];
         $MoTa = $_POST['MoTa'];
         $NamXuatBan = $_POST['NamXuatBan'];
-
+        if (empty($TenSach) || empty($MoTa) || empty($NamXuatBan)) {
+            echo "<div id='success-message' class='success-message' style='color: red;'>Vui lòng nhập đầy đủ thông tin</div>";
+            return;
+        }
         // Kiểm tra xem người dùng đã tải lên hình ảnh mới hay không
         if (isset($_FILES['HinhAnhBia']['tmp_name']) && !empty($_FILES['HinhAnhBia']['tmp_name'])) {
             $uploadOk = 1;
@@ -582,7 +619,10 @@ function addSachHieuSoi()
         $MoTa = $_POST['MoTa'];
         $Gia = $_POST['Gia'];
         $NamXuatBan = $_POST['NamXuatBan'];
-
+        if (empty($TenSach) || empty($TacGia) || empty($MoTa) || empty($NamXuatBan) || empty($Gia)) {
+            echo "<div id='success-message' class='success-message' style='color: red;'>Vui lòng nhập đầy đủ thông tin</div>";
+            return;
+        }
         $hinhanhpath = basename($_FILES['HinhAnhBia']['name']);
         $target_dir = "sach_hieusoi/uploads/";
         $target_file = $target_dir . $hinhanhpath;
@@ -622,7 +662,10 @@ function updateSachHieuSoi()
         $MoTa = $_POST['MoTa'];
         $Gia = $_POST['Gia'];
         $NamXuatBan = $_POST['NamXuatBan'];
-
+        if (empty($TenSach) || empty($TacGia) || empty($MoTa) || empty($NamXuatBan) || empty($Gia)) {
+            echo "<div id='success-message' class='success-message' style='color: red;'>Vui lòng nhập đầy đủ thông tin</div>";
+            return;
+        }
         $targetDir = 'sach_dientu/uploads/';
         $uploadOk = 1;
         $imageFileType = strtolower(pathinfo($_FILES["HinhAnhBia"]["name"], PATHINFO_EXTENSION));
@@ -650,7 +693,7 @@ function updateSachHieuSoi()
             } else {
                 echo "Lỗi khi tải hình ảnh.";
             }
-            
+
         } else {
             // nếu người dùng không tải lên hình ảnh mới, chỉ cập nhật thông tin khác
             $sql_update = "UPDATE sach_soi SET danhMucID = '$DanhMuc', TenSach = '$TenSach', TacGia = '$TacGia', MoTa = '$MoTa', Gia = '$Gia', NamXuatBan = '$NamXuatBan' WHERE MaSach = '$MaSach'";
@@ -692,5 +735,20 @@ function deleteSachHieuSoi()
     }
 }
 
+function deleteBinhLuan()
+{
+    $conn = connect_db();
 
+    if (isset($_POST['MaDG'])) {
+        $maDGcanxoa = $_POST['MaDG'];
+        $sql_delete_book = "DELETE FROM danhgia_nhanxet WHERE MaDG = $maDGcanxoa";
+        if (mysqli_query($conn, $sql_delete_book)) {
+            header('Location: index.php?act=listnhanxet');
+            exit;
+        } else {
+            echo "Lỗi khi xóa sách: " . mysqli_error($conn);
+        }
+        mysqli_close($conn);
+    }
+}
 ?>

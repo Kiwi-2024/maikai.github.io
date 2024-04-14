@@ -143,6 +143,14 @@ include "header.php";
                     include "sach_hieusoi/delete.php";
                     break;
 
+                    case 'listnhanxet':
+                        include "binhluan/list_nhanxet.php";
+                        break;
+
+                        case 'deletebinhluan':
+                            deleteBinhLuan();
+                            include "binhluan/delete_bl.php";
+                            break;
                 default:
                     break;
             }

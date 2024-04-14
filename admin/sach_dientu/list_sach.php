@@ -1,8 +1,6 @@
 <?php
-// Kết nối tới cơ sở dữ liệu
 require_once "../db/db.php";
 
-// Khởi tạo biến $results
 $results = null;
 
 if (isset($_GET['btnsearch'])) {

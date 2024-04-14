@@ -10,7 +10,6 @@
 if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
     if ($lich_su_sach && mysqli_num_rows($lich_su_sach) > 0) { 
         ?>
-
 <div class="div-112">
     <div class="div-113">
         <h2>Lịch sử đọc sách</h2>
@@ -29,6 +28,7 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
     </div>
 </div>
 <?php }} ?>
+
 <?php
     if ($TacPhamKinhDien && mysqli_num_rows($TacPhamKinhDien) > 0) { 
         ?>

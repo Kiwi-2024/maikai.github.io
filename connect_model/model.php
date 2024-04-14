@@ -5,7 +5,7 @@ if (session_status() == PHP_SESSION_NONE) {
 
 require_once ('db/db.php');
 $sachmienphi = mysqli_query($conn, "SELECT * FROM sach where LoaiSach = 'MienPhi'");
-$MoiNhat = mysqli_query($conn, "SELECT * FROM sach");
+$MoiNhat = mysqli_query($conn, "SELECT * FROM sach ORDER BY MaSach DESC");
 $TacPhamKinhDien = mysqli_query($conn, "SELECT * FROM sach where danhMucID = '37'");
 $TrinhTham = mysqli_query($conn, "SELECT * FROM sach where danhMucID = '23'");
 $Marketing = mysqli_query($conn, "SELECT * FROM sach where danhMucID = '24'");
@@ -83,18 +83,13 @@ WHERE
     yeuthich.nguoi_dung_id = $MaKH";
 
 
-    // Thực thi truy vấn
     $tu_sach = mysqli_query($conn, $sql_tusach);
-    
-    // Kiểm tra lỗi trong quá trình thực thi truy vấn
     if (!$tu_sach) {
         die("Lỗi truy vấn: " . mysqli_error($conn));
     }
     
 }
-
 //================================================================
-
 
 if (isset($_GET['MaSach'])) {
     $MaSach = $_GET['MaSach'];

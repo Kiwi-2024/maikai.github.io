@@ -1,6 +1,7 @@
 <?php
 include "header.php";
 
+
 // Kiểm tra nếu tham số MaSach được truyền qua URL
 if (isset($_GET['MaSach'])) {
 
@@ -270,7 +271,7 @@ if (isset($_GET['MaSach'])) {
                             </div>
                         </div>
                         <div class="bewen2">
-
+                                    
                         </div>
                     </div>
                 </div>
@@ -750,7 +751,7 @@ if (isset($_GET['MaSach'])) {
                             </div>
                         </div>
                         <div class="bewen2">
-
+                                    
                         </div>
                     </div>
                 </div>
@@ -760,12 +761,17 @@ if (isset($_GET['MaSach'])) {
             }
         }
     }
+    
+    mysqli_close($conn);
 
     // Đóng kết nối
-    mysqli_close($conn);
 } else {
     echo "Không có ID sách được chỉ định.";
 }
 
+?>
+
+
+<?php
 include "footer.php";
 ?>
