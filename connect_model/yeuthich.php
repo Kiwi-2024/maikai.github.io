@@ -41,7 +41,7 @@ if (isset($_POST['MaKH'])) {
             // Nếu đã thích rồi, xóa sự thích
             $delete_result = $conn->query($delete_sql);
             if ($delete_result) {
-               header("Location: {$_SERVER['HTTP_REFERER']}");
+                header("Location: {$_SERVER['HTTP_REFERER']}");
                 exit;
             } else {
 

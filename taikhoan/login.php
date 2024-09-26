@@ -20,8 +20,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         }else{
             echo 'Vui lòng nhập lại Email hoặc mật khẩu';
         }
-
-        // Lưu thông tin người dùng vào session
         $_SESSION['loggedin'] = true;
         $_SESSION['Email'] = $row['Email'];
         $_SESSION['HoTen'] = $row['HoTen'];

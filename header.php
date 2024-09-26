@@ -27,8 +27,7 @@ require_once "connect_model/model.php";
                 <a href="sachdientu.php" class="pgp">Sách điện tử</a>
                 <a href="sachnoi.php" id="About" class="pgp">Sách nói</a>
                 <a href="sachhieusoi.php" class="pgp">Sách hiệu sồi</a>
-                <a href="#seemore" class="pgp">Sách tóm tắt</a>
-                <a href="#footer" class="pgp">Podcast</a>
+                <a href="sachdientu.phpc" class="pgp">Sách tóm tắt</a>
             </nav>
         </div>
         <div class="nav1-c">
@@ -131,7 +130,9 @@ require_once "connect_model/model.php";
         <div class="from-box login">
             <h2>Đăng Nhập</h2>
             <div class="form-logo1">
-                <div class="code-qr"></div>
+                <div class="code-qr">
+                    <img src="img/qr.png" alt="">
+                </div>
                 <form action="taikhoan/login.php" class="form-var" method="post">
                     <div class="input-box">
                         <span class="icon"><ion-icon name="mail"></ion-icon></span>
@@ -159,7 +160,7 @@ require_once "connect_model/model.php";
         <div class="from-box register">
             <h2 class="h2">Đăng Ký</h2>
             <div class="form-logo1">
-                <div class="code-qr"></div>
+                <div class="code-qr"><img src="img/qr.png" alt=""></div>
                 <form action="taikhoan/register.php" method="post">
                     <div class="input-box">
                         <span class="icon"><ion-icon name="person"></ion-icon></span>
@@ -175,7 +176,7 @@ require_once "connect_model/model.php";
                         <span class="icon">
                             <ion-icon name="call"></ion-icon>
                         </span>
-                        <input type="text" id="registerPhone" name="SoDienThoai" required>
+                        <input type="text" id="registerPhone" name="SoDienThoai" pattern="[0-9]{10}" title="Số điện thoại phải có 10 chữ số" required>
                         <label>Số điện thoại</label>
                         <span id="phoneError" class="error-message"></span>
                     </div>

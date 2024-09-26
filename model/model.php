@@ -11,32 +11,28 @@ function connect_db()
 function addDanhMuc()
 {
     if (isset($_POST['TenDM']) && isset($_POST['MoTa'])) {
-
         $conn = connect_db();
         $TenDM = $_POST['TenDM'];
         $MoTa = $_POST['MoTa'];
+        
         if (empty($TenDM) || empty($MoTa)) {
             echo "<div id='success-message' class='success-message' style='color: red;'>Vui lòng nhập đầy đủ thông tin</div>";
             return;
         }
-        // Thực hiện truy vấn để thêm dữ liệu vào cơ sở dữ liệu
-        $sql = "INSERT INTO danhmuc (TenDM, MoTa) VALUES (?, ?)";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ss", $TenDM, $MoTa);
 
-        if ($stmt->execute()) {
+        // Thực hiện truy vấn để thêm dữ liệu vào cơ sở dữ liệu
+        $sql = "INSERT INTO danhmuc (TenDM, MoTa) VALUES ('$TenDM', '$MoTa')";
+        
+        if ($conn->query($sql) === TRUE) {
             echo "<div id='success-message' class='success-message'>Thêm danh mục thành công</div>";
         } else {
             echo "Lỗi: " . $sql . "<br>" . $conn->error;
         }
 
-        $stmt->close();
-
-
         $conn->close();
     }
-
 }
+
 
 function updateDM()
 {
@@ -82,23 +78,18 @@ function addDanhMucHieuSoi()
             echo "<div id='success-message' class='success-message' style='color: red;'>Vui lòng nhập đầy đủ thông tin</div>";
             return;
         }
-        // Thực hiện truy vấn để thêm dữ liệu vào cơ sở dữ liệu
-        $sql = "INSERT INTO danhmuc_sachsoi (TenDM, MoTa) VALUES (?, ?)";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ss", $TenDM, $MoTa);
 
-        if ($stmt->execute()) {
+        // Thực hiện truy vấn để thêm dữ liệu vào cơ sở dữ liệu
+        $sql = "INSERT INTO danhmuc_sachsoi (TenDM, MoTa) VALUES ('$TenDM', '$MoTa')";
+        
+        if ($conn->query($sql) === TRUE) {
             echo "<div id='success-message' class='success-message'>Thêm danh mục thành công</div>";
         } else {
-            echo "Lỗi: " . $sql . "<br>" . $conn->error;
+            echo "Lỗi: " . $conn->error;
         }
-
-        $stmt->close();
-
 
         $conn->close();
     }
-
 }
 
 
@@ -176,25 +167,21 @@ function addSach()
 
         if (move_uploaded_file($_FILES["HinhAnhBia"]["tmp_name"], $target_file)) {
             $HinhAnhBia = $target_file;
-            $sql = "INSERT INTO sach (danhMucID, TenSach, TacGia, MoTa, LoaiSach, NamXuatBan, HinhAnhBia) VALUES (?, ?, ?, ?, ?, ?, ?)";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("sssssss", $DanhMuc, $TenSach, $TacGia, $MoTa, $LoaiSach, $NamXuatBan, $HinhAnhBia);
-
-            if ($stmt->execute()) {
+            $sql = "INSERT INTO sach (danhMucID, TenSach, TacGia, MoTa, LoaiSach, NamXuatBan, HinhAnhBia) VALUES ('$DanhMuc', '$TenSach', '$TacGia', '$MoTa', '$LoaiSach', '$NamXuatBan', '$HinhAnhBia')";
+            
+            if ($conn->query($sql) === TRUE) {
                 echo "<div id='success-message' class='success-message'>Thêm sách thành công</div>";
             } else {
-                echo "Lỗi: " . $sql . "<br>" . $conn->error;
+                echo "Lỗi: " . $conn->error;
             }
-
-            $stmt->close();
         } else {
             echo "Hình ảnh không được tải lên thành công";
         }
 
         $conn->close();
     }
-
 }
+
 
 // Update sách điện tử
 
@@ -494,15 +481,12 @@ function audioFile()
                 $new_MyAudio = uniqid("audio-", true) . '.' . $audio_ex_lc;
                 $audio_upload_path = 'audio/uploads/' . $new_MyAudio;
                 move_uploaded_file($tmp_name, $audio_upload_path);
-
-                // Xử lý upload hình ảnh bìa
                 $hinhanhpath = basename($_FILES['HinhAnhBia']['name']);
                 $target_dir = "audio/uploads/";
                 $target_file = $target_dir . $hinhanhpath;
 
                 if (move_uploaded_file($_FILES["HinhAnhBia"]["tmp_name"], $target_file)) {
                     $HinhAnhBia = $target_file;
-                    // Thực hiện truy vấn để thêm dữ liệu vào cơ sở dữ liệu
                     $sql = "INSERT INTO sach_noi (danhMucID, TenSach, Sach_url, HinhAnhBia, MoTa, NamXuatBan) 
                             VALUES('$DanhMuc', '$TenSach', '$audio_upload_path', '$HinhAnhBia', '$MoTa', '$NamXuatBan')";
 

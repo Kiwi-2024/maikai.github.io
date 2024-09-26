@@ -98,15 +98,12 @@ if (isset($_GET['MaSach'])) {
     $sql_sach_soi = "SELECT * FROM sach_soi WHERE MaSach = $MaSach";
     $sql_sach_noi = "SELECT * FROM sach_noi WHERE MaSach = $MaSach";
 
-    // Thực hiện truy vấn và kiểm tra kết quả
     $result_sach_noi = mysqli_query($conn, $sql_sach_noi);
     $result_sach_soi = mysqli_query($conn, $sql_sach_soi);
     $result_sach = mysqli_query($conn, $sql_sach);
 
     $sql_chuong = "SELECT * FROM chuong_sach WHERE sach_id = $MaSach";
     $sql_chuong_soi = "SELECT * FROM chuong_sach WHERE sach_soi_id = $MaSach";
-
-
 
     $result_chuong = mysqli_query($conn, $sql_chuong);
     $result_chuong_soi = mysqli_query($conn, $sql_chuong_soi);
@@ -118,7 +115,6 @@ if (isset($_GET['MaSach'])) {
         exit();
     }
 
-    // Lấy dữ liệu từ kết quả truy vấn
     $row_sach_noi = mysqli_fetch_assoc($result_sach_noi);
     $row_sach_soi = mysqli_fetch_assoc($result_sach_soi);
     $row_sach = mysqli_fetch_assoc($result_sach);

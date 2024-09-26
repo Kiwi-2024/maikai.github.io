@@ -231,7 +231,7 @@ if (isset($_GET['MaSach'])) {
                                 FROM danhgia_nhanxet dn
                                 INNER JOIN sach s ON dn.sach_id = s.MaSach 
                                 INNER JOIN khach_hang kh ON dn.nguoi_dung_id = kh.MaKH
-                                WHERE dn.sach_id = $MaSach";
+                                WHERE dn.sach_id = $MaSach  order by MaDG desc";
 
                                     // Thực thi truy vấn
                                     $result_danhgia_nhanxet = $conn->query($sql_danhgia_nhanxet);
@@ -479,7 +479,7 @@ if (isset($_GET['MaSach'])) {
                                 FROM danhgia_nhanxet dn
                                 INNER JOIN sach_soi s ON dn.sach_soi_id = s.MaSach 
                                 INNER JOIN khach_hang kh ON dn.nguoi_dung_id = kh.MaKH
-                                WHERE dn.sach_soi_id = $MaSach";
+                                WHERE dn.sach_soi_id = $MaSach order by MaDG desc";
 
                                     // Thực thi truy vấn
                                     $result_danhgia_nhanxet = $conn->query($sql_danhgia_nhanxet);
@@ -711,7 +711,7 @@ if (isset($_GET['MaSach'])) {
                                 FROM danhgia_nhanxet dn
                                 INNER JOIN sach_noi s ON dn.sach_noi_id = s.MaSach 
                                 INNER JOIN khach_hang kh ON dn.nguoi_dung_id = kh.MaKH
-                                WHERE dn.sach_noi_id = $MaSach";
+                                WHERE dn.sach_noi_id = $MaSach order by MaDG desc";
 
                                     // Thực thi truy vấn
                                     $result_danhgia_nhanxet = $conn->query($sql_danhgia_nhanxet);
